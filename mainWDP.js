@@ -253,6 +253,11 @@ if (document.getElementsByClassName('interactive-input').length > 0) {
 	}
 }
 
+//remove searchbar
+const searchbar = document.getElementsByClassName('searchbox-container')[0]
+if (searchbar) {
+	searchbar.remove()
+}
 
 
 const elements = document.getElementsByClassName('element-list');
