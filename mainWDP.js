@@ -264,7 +264,7 @@ if (searchbar) {
 const elements = document.getElementsByClassName('element-list');
 for (var i = 0; elements[i]; i++) {
 	const ele = elements[i];
-	ele.setAttribute("style", "overflow-y: visible; height: auto;");
+	ele.setAttribute("style", "overflow-y: visible; height: auto; border-bottom: 1px solid black");
 };
 
 
