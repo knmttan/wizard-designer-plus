@@ -1,7 +1,10 @@
 //change title to flow name
 if (['node', 'transition'].includes(path.split('/')[1])) {
-    const title = path.split('/')[2].replace('Cancellation ', '');
-    document.title = title
+    let flowName = path.split('/')[2].replace('Cancellation ', '');
+    while(flowName.length>30) {
+	    flowName = flowName.split(' ').slice(1).join(' ');
+    }
+    document.title = flowName
 }
 function setFavicons(favImg) {
     let headTitle = document.querySelector('head');
