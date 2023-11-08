@@ -15,9 +15,9 @@ setInterval(function()
 
 
 // Fast save code below
+const path = decodeURI(document.location.pathname);
 // First check if we are on the node editor page, for performance reasons because we set a mutation observer
 if(currentPage.includes('node')) {
-	const path = decodeURI(document.location.pathname);
 	try {
 		//skip confirmation pop up except transition
 		const realConfirm=window.confirm;
