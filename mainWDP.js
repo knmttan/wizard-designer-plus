@@ -1,6 +1,6 @@
 
 let currentPage = location.href;
-// listen for changes
+// auto-refresh page if its in the node editor or transition editor (changes only get applied after a refresh)
 setInterval(function()
 {
 	if (currentPage != location.href)
@@ -25,72 +25,76 @@ if (path.split('/')[1] != 'transition'){
 } else {
 	window.confirm=realConfirm;
 }
-//skip save description
-let saveDescNode = null;
-let display = '';
-const observer = new MutationObserver(function(mutations_list) {
-	mutations_list.forEach(function(mutation) {
-		mutation.addedNodes.forEach(function(added_node) {
-			if(added_node.role == 'presentation') {
-				if(added_node.innerText.indexOf('Update element description') !== -1) {
-					saveDescNode = added_node;
-					saveDescNode.style.display = display;
+
+// Fast save code below
+// First check if we are on the node editor page, for performance reasons because we set a mutation observer
+if(currentPage.includes('node')) {
+	//skip save description
+	let saveDescNode = null;
+	let display = '';
+	const observer = new MutationObserver(function(mutations_list) {
+		mutations_list.forEach(function(mutation) {
+			mutation.addedNodes.forEach(function(added_node) {
+				if(added_node.role == 'presentation') {
+					if(added_node.innerText.indexOf('Update element description') !== -1) {
+						saveDescNode = added_node;
+						saveDescNode.style.display = display;
+					}
+				}
+			});
+		});
+	});
+	observer.observe(document.body, { subtree: false, childList: true });
+	
+	// Add save description button
+	
+	const lis = document.getElementsByClassName("App")[0].getElementsByTagName('li');
+	let saveButtonLi = null;
+	for (var i = 0; lis[i]; i++) {
+		if(lis[i].innerText=="Save changes") {
+			saveButtonLi = lis[i];
+		}
+	}
+	const parentUl = saveButtonLi.parentNode;
+	let newSaveDescriptionLi = document.createElement("li");
+	newSaveDescriptionLi.innerHTML = saveButtonLi.innerHTML;
+	const txt = newSaveDescriptionLi.getElementsByTagName('span')[0];
+	txt.textContent = "Save description";
+	parentUl.appendChild(newSaveDescriptionLi);
+	parentUl.appendChild(saveButtonLi);
+	
+	
+		const saveChangesButton = saveButtonLi.getElementsByTagName('button')[0];
+		const saveDescriptionButton = newSaveDescriptionLi.getElementsByTagName('button')[0];
+	
+		let saveDescriptionClicked = false;
+		saveDescriptionButton.addEventListener("click", function() {
+			saveDescriptionClicked = true;
+			saveChangesButton.click()
+			saveDescriptionClicked = false;
+		});
+	
+		saveChangesButton.addEventListener("click", function() {
+			if(saveDescNode) {
+				if(saveDescriptionClicked) {
+					display = '';
+					saveDescNode.style.display = '';
+				} else {
+					display = 'none';
+					saveDescNode.style.display = 'none';
+				}
+			} else {
+				if(saveDescriptionClicked) {
+					display = '';
+				} else {
+					display = 'none';
 				}
 			}
 		});
-	});
-});
-observer.observe(document.body, { subtree: false, childList: true });
-
-// Add save description button
-
-const lis = document.getElementsByClassName("App")[0].getElementsByTagName('li');
-let saveButtonLi = null;
-for (var i = 0; lis[i]; i++) {
-	if(lis[i].innerText=="Save changes") {
-		saveButtonLi = lis[i];
+	} catch{
+		console.log("ERROR")
 	}
 }
-const parentUl = saveButtonLi.parentNode;
-let newSaveDescriptionLi = document.createElement("li");
-newSaveDescriptionLi.innerHTML = saveButtonLi.innerHTML;
-const txt = newSaveDescriptionLi.getElementsByTagName('span')[0];
-txt.textContent = "Save description";
-parentUl.appendChild(newSaveDescriptionLi);
-parentUl.appendChild(saveButtonLi);
-
-
-	const saveChangesButton = saveButtonLi.getElementsByTagName('button')[0];
-	const saveDescriptionButton = newSaveDescriptionLi.getElementsByTagName('button')[0];
-
-	let saveDescriptionClicked = false;
-	saveDescriptionButton.addEventListener("click", function() {
-		saveDescriptionClicked = true;
-		saveChangesButton.click()
-		saveDescriptionClicked = false;
-	});
-
-	saveChangesButton.addEventListener("click", function() {
-		if(saveDescNode) {
-			if(saveDescriptionClicked) {
-				display = '';
-				saveDescNode.style.display = '';
-			} else {
-				display = 'none';
-				saveDescNode.style.display = 'none';
-			}
-		} else {
-			if(saveDescriptionClicked) {
-				display = '';
-			} else {
-				display = 'none';
-			}
-		}
-	});
-} catch{
-	console.log("ERROR")
-}
-
 
 
 //change title to flow name
@@ -131,11 +135,20 @@ if (document.location.host.match(".*wizard-designer.agoda.local.*")) {
 	}
 } else if (window.location.href.match(".*agoda.*\/wizard.*")) {
 	setFavicons('https://cdn-icons-png.flaticon.com/128/1541/1541402.png');
-	const flowName = document.getElementsByClassName("title")[0].children.item(0).innerText
+	// for agent debugger, this works fine
+	let flowName = document.getElementsByClassName("title")[0].children.item(0).innerText
+	// for vivr debugger, the title is set by react, need to apply a mutation observer to capture it
+	if(document.location.host.match(".*visual-ivr.*")) {
+		const titleElement = document.getElementsByClassName("title")[0].children.item(0)
+		const observer = new MutationObserver(getTitle);
+		function getTitle(mutations, observer) {
+		  flowName = titleElement.innerText;
+		  observer.disconnect();
+		}
+	}
 	document.title = 'Debug ' + flowName;
 	removeElementsByClass('footer-container')
 }
-
 
 
 
