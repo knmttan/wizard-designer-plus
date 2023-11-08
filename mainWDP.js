@@ -129,10 +129,10 @@ if (document.location.host.match(".*wizard-designer.agoda.local.*")) {
 	} else {
 		setFavicons('https://cdn-icons-png.flaticon.com/128/1680/1680365.png');
 	}
-} else if (document.location.host.match(".*agoda.*\/wizard.*")) {
+} else if (window.location.href.match(".*agoda.*\/wizard.*")) {
 	setFavicons('https://cdn-icons-png.flaticon.com/128/1541/1541402.png');
-	let params = new URLSearchParams(location.href);
-	document.title = 'Debug ' + params.get('flowName');
+	const flowName = document.getElementsByClassName("title")[0].children.item(0).innerText
+	document.title = 'Debug ' + flowName;
 	removeElementsByClass('footer-container')
 }
 
