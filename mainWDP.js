@@ -7,7 +7,7 @@ setInterval(function()
 	{
 		// page has changed, set new page as 'current'
 		currentPage = location.href;
-		if(currentPage.includes('node')) {
+		if(currentPage.includes('node')||currentPage.includes('transition')) {
 			location.reload();
 		}
 	}
@@ -95,8 +95,11 @@ parentUl.appendChild(saveButtonLi);
 
 //change title to flow name
 if (['node', 'transition'].includes(path.split('/')[1])) {
-	const title = path.split('/')[2].replace('Cancellation ', '');
-	document.title = title
+    let flowName = path.split('/')[2].replace('Cancellation ', '');
+    while(flowName.length>30) {
+	    flowName = flowName.split(' ').slice(1).join(' ');
+    }
+    document.title = flowName
 }
 function setFavicons(favImg) {
 	let headTitle = document.querySelector('head');
@@ -260,28 +263,24 @@ if (searchbar) {
 	searchbar.remove()
 }
 
-
+// get rid of the terrible scroll bar for element names
 const elements = document.getElementsByClassName('element-list');
 for (var i = 0; elements[i]; i++) {
 	const ele = elements[i];
 	ele.setAttribute("style", "overflow-y: visible; height: auto; border-bottom: 1px solid black");
 };
 
-
-if (document.getElementById("debuggerviewcontainer")) {
-	const ele = document.getElementById("debuggerviewcontainer").children.item(3).getElementsByClassName('content')[0].children.item(0);
-	ele.setAttribute("style", "flex-direction: column;");
-	const obs = new MutationObserver(function (mutations_list) {
-		mutations_list.forEach(function (mutation) {
-			mutation.addedNodes.forEach(function (added_node) {
-				added_node.children.item(0).setAttribute("style", "height: 100%; width: 90%; padding-bottom: 20px;");
-				console.log(added_node);
-				if (added_node.class == 'key-container') {
-					console.log("hi added node");
-					console.log(added_node.parentNode);
-				}
-			});
-		});
-	});
-	obs.observe(ele, { subtree: false, childList: true });
+// Make element transitions in debugger vertical and wider
+if(document.getElementById("debuggerviewcontainer")) {
+    const ele = document.getElementById("debuggerviewcontainer").children.item(3).getElementsByClassName('content')[0].children.item(0);
+    ele.setAttribute("style", "flex-direction: column;");
+    // in visual IVR debugger, observer is attached to a non-existant element. need to research
+    const obs = new MutationObserver(function(mutations_list) {
+        mutations_list.forEach(function(mutation) {
+            mutation.addedNodes.forEach(function(added_node) {
+                added_node.children.item(0).setAttribute("style", "height: 100%; width: 90%; padding-bottom: 20px;");
+            });
+        });
+    });
+    obs.observe(ele, { subtree: false, childList: true });
 }
