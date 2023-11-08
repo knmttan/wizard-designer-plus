@@ -140,11 +140,13 @@ if (document.location.host.match(".*wizard-designer.agoda.local.*")) {
 	// for vivr debugger, the title is set by react, need to apply a mutation observer to capture it
 	if(document.location.host.match(".*visual-ivr.*")) {
 		const titleElement = document.getElementsByClassName("title")[0].children.item(0)
-		const observer = new MutationObserver(getTitle);
+		const title_observer = new MutationObserver(getTitle);
 		function getTitle(mutations, observer) {
 		  flowName = titleElement.innerText;
-		  observer.disconnect();
+		  document.title = 'Debug ' + flowName;
+		  title_observer.disconnect();
 		}
+		title_observer.observe(titleElement, { subtree: false, childList: true });
 	}
 	document.title = 'Debug ' + flowName;
 	removeElementsByClass('footer-container')
