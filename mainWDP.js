@@ -119,7 +119,7 @@ function removeElementsByClass(className) {
 
 
 // change icon
-if (document.location.host.split('.')[0] == 'qa-wizard-designer') {
+if (document.location.host.match(".*wizard-designer.agoda.local.*")) {
 	if (document.location.pathname.split('/')[1] == 'integrationPoint') {
 		setFavicons('https://cdn-icons-png.flaticon.com/128/9110/9110100.png')
 		document.title = 'API builder';
@@ -129,7 +129,7 @@ if (document.location.host.split('.')[0] == 'qa-wizard-designer') {
 	} else {
 		setFavicons('https://cdn-icons-png.flaticon.com/128/1680/1680365.png');
 	}
-} else if (document.location.host.split('.')[0] == 'qa-cegwiz') {
+} else if (document.location.host.match(".*agoda.*\/wizard.*")) {
 	setFavicons('https://cdn-icons-png.flaticon.com/128/1541/1541402.png');
 	let params = new URLSearchParams(location.href);
 	document.title = 'Debug ' + params.get('flowName');
@@ -272,15 +272,16 @@ for (var i = 0; elements[i]; i++) {
 
 // Make element transitions in debugger vertical and wider
 if(document.getElementById("debuggerviewcontainer")) {
-    const ele = document.getElementById("debuggerviewcontainer").children.item(3).getElementsByClassName('content')[0].children.item(0);
-    ele.setAttribute("style", "flex-direction: column;");
-    // in visual IVR debugger, observer is attached to a non-existant element. need to research
-    const obs = new MutationObserver(function(mutations_list) {
-        mutations_list.forEach(function(mutation) {
-            mutation.addedNodes.forEach(function(added_node) {
-                added_node.children.item(0).setAttribute("style", "height: 100%; width: 90%; padding-bottom: 20px;");
-            });
-        });
-    });
-    obs.observe(ele, { subtree: false, childList: true });
+	let transitionsElementIndex = 3;
+	if(document.location.host.match(".*visual-ivr.*")) transitionsElementIndex = 2;
+	const ele = document.getElementById("debuggerviewcontainer").children.item(transitionsElementIndex).getElementsByClassName('content')[0].children.item(0);
+	ele.setAttribute("style", "flex-direction: column;");
+	const obs = new MutationObserver(function(mutations_list) {
+		mutations_list.forEach(function(mutation) {
+			mutation.addedNodes.forEach(function(added_node) {
+				added_node.children.item(0).setAttribute("style", "height: 100%; width: 90%; padding-bottom: 20px;");
+			});
+		});
+	});
+	obs.observe(ele, { subtree: false, childList: true });
 }
