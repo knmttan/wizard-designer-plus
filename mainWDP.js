@@ -121,36 +121,40 @@ function removeElementsByClass(className) {
 }
 
 
-
-// change icon
-if (document.location.host.match(".*wizard-designer.agoda.local.*")) {
-	if (document.location.pathname.split('/')[1] == 'integrationPoint') {
-		setFavicons('https://cdn-icons-png.flaticon.com/128/9110/9110100.png')
-		document.title = 'API builder';
-	} else if (document.location.pathname.split('/')[1].includes('deploy')) {
-		setFavicons('https://cdn-icons-png.flaticon.com/128/4471/4471714.png')
-		document.title = 'Deploy';
-	} else {
-		setFavicons('https://cdn-icons-png.flaticon.com/128/1680/1680365.png');
-	}
-} else if (window.location.href.match(".*agoda.*\/wizard.*")) {
-	setFavicons('https://cdn-icons-png.flaticon.com/128/1541/1541402.png');
-	// for agent debugger, this works fine
-	let flowName = document.getElementsByClassName("title")[0].children.item(0).innerText
-	// for vivr debugger, the title is set by react, need to apply a mutation observer to capture it
-	if(document.location.host.match(".*visual-ivr.*")) {
-		const titleElement = document.getElementsByClassName("title")[0].children.item(0)
-		const title_observer = new MutationObserver(getTitle);
-		function getTitle(mutations, observer) {
-		  flowName = titleElement.innerText;
-		  document.title = 'Debug ' + flowName;
-		  title_observer.disconnect();
+try {
+	// change icon
+	if (document.location.host.match(".*wizard-designer.agoda.local.*")) {
+		if (document.location.pathname.split('/')[1] == 'integrationPoint') {
+			setFavicons('https://cdn-icons-png.flaticon.com/128/9110/9110100.png')
+			document.title = 'API builder';
+		} else if (document.location.pathname.split('/')[1].includes('deploy')) {
+			setFavicons('https://cdn-icons-png.flaticon.com/128/4471/4471714.png')
+			document.title = 'Deploy';
+		} else {
+			setFavicons('https://cdn-icons-png.flaticon.com/128/1680/1680365.png');
 		}
-		title_observer.observe(titleElement, { subtree: false, childList: true });
+	} else if (window.location.href.match(".*agoda.*\/wizard.*")) {
+		setFavicons('https://cdn-icons-png.flaticon.com/128/1541/1541402.png');
+		// for agent debugger, this works fine
+		let flowName = document.getElementsByClassName("title")[0].children.item(0).innerText
+		// for vivr debugger, the title is set by react, need to apply a mutation observer to capture it
+		if (document.location.host.match(".*visual-ivr.*")) {
+			const titleElement = document.getElementsByClassName("title")[0].children.item(0)
+			const title_observer = new MutationObserver(getTitle);
+			function getTitle(mutations, observer) {
+				flowName = titleElement.innerText;
+				document.title = 'Debug ' + flowName;
+				title_observer.disconnect();
+			}
+			title_observer.observe(titleElement, { subtree: false, childList: true });
+		}
+		document.title = 'Debug ' + flowName;
+		removeElementsByClass('footer-container')
 	}
-	document.title = 'Debug ' + flowName;
-	removeElementsByClass('footer-container')
+} catch (e) {
+	console.log('error' + e)
 }
+
 
 
 
