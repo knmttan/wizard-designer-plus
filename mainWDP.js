@@ -303,7 +303,8 @@ if(document.getElementById("debuggerviewcontainer")) {
 
 
 //add element connected from
-const createConnectedFrom = (elementName) => {
+if (currentPage.includes('transition')) {
+	const createConnectedFrom = (elementName) => {
 	let tmpDiv = document.querySelector('#connectedFromDiv')
 	if (tmpDiv) {
 		tmpDiv.remove()
@@ -320,15 +321,12 @@ const createConnectedFrom = (elementName) => {
 	const flowName = window.sessionStorage.flowName
 	const flowDetails = JSON.parse(window.sessionStorage[flowName])
 
-	console.log(flowDetails)
-	console.log(elementName)
 	let connected_from = {};
 
 	for (let [key, value] of Object.entries(flowDetails.transitions)) {
 		if (Object.keys(value).length === 0) {
 			continue;
 		}
-		// console.log('transitions')
 		for (let transition of Object.values(value)) {
 			if (elementName == '0002 Intro SF END') {
 			}
@@ -358,14 +356,10 @@ const createConnectedFrom = (elementName) => {
                 </div>
             `
 	connectToPannel.appendChild(div)
-	console.log(elementFromList)
-	console.log(connected_from)
 }
 
 var observerTestChild = new MutationObserver((mutationsList, observer) => {
 	for (let mutation of mutationsList) {
-		console.log('second mutation')
-		console.log(mutation.target.data)
 		const elementName = mutation.target.data
 		createConnectedFrom(elementName)
 
@@ -381,19 +375,15 @@ var connectTo = document.getElementsByClassName('gXgqKp')[0]
 // Create a MutationObserver instance
 let observerTest = new MutationObserver((mutationsList, observer) => {
 	for (let mutation of mutationsList) {
-		console.log(mutation)
 		if (connectTo.innerHTML == '') {
-			console.log('empty')
 			observerTestChild.disconnect()
 		} else {
-			console.log('not empty')
 			newDOMToObs = document.querySelector(".jXZPoB > span");
-			console.log(newDOMToObs)
 			const elementName = newDOMToObs.innerHTML.replace('Keys', '').trim()
-			console.log(elementName)
 			createConnectedFrom(elementName)
 			observerTestChild.observe(newDOMToObs, { characterData: true, attributes: false, childList: true, subtree: true });
 		}
 	}
 });
 observerTest.observe(connectTo, { childList: true, subtree: false });
+}
