@@ -300,3 +300,100 @@ if(document.getElementById("debuggerviewcontainer")) {
 	});
 	obs.observe(ele, { subtree: false, childList: true });
 }
+
+
+//add element connected from
+const createConnectedFrom = (elementName) => {
+	let tmpDiv = document.querySelector('#connectedFromDiv')
+	if (tmpDiv) {
+		tmpDiv.remove()
+	}
+
+	var connectToPannel = connectTo.getElementsByTagName('li')[0]
+	var connectToBox = connectToPannel.getElementsByTagName('div')[0]
+	connectToBox.style = 'height: auto; padding-bottom: 20px;'
+	var div = document.createElement('div');
+	div.classList.add('sc-hlGDCY');
+	div.classList.add('iCsbmk');
+	div.id = 'connectedFromDiv'
+
+	const flowName = window.sessionStorage.flowName
+	const flowDetails = JSON.parse(window.sessionStorage[flowName])
+
+	console.log(flowDetails)
+	console.log(elementName)
+	let connected_from = {};
+
+	for (let [key, value] of Object.entries(flowDetails.transitions)) {
+		if (Object.keys(value).length === 0) {
+			continue;
+		}
+		// console.log('transitions')
+		for (let transition of Object.values(value)) {
+			if (elementName == '0002 Intro SF END') {
+			}
+			if (typeof transition === 'object' && 'subflow' in transition) {
+				sfId = 'SF_' + transition.subflow
+				nextPage = transition.nextPage
+				if (!(nextPage in connected_from)) connected_from[nextPage] = [];
+				if (!connected_from[nextPage].includes(sfId)) connected_from[nextPage].push(sfId);
+			}
+			if (typeof transition === 'object' && 'mainFlowId') {
+				transition = 'SWITCH_' + transition['mainFlowId'];
+			}
+			if (!(transition in connected_from)) {
+				connected_from[transition] = [];
+			}
+			if (!connected_from[transition].includes(key)) connected_from[transition].push(key);
+		}
+	}
+
+	const elementFromList = !!connected_from[elementName] ? connected_from[elementName] : ['Nothing connected to this element']
+	const elementFromListDiv = elementFromList.map((element) => `<div style="margin-top: 10px; border-bottom: 1px solid black; text-align:left; padding-left:10px ">${element}</div>`)
+
+	div.innerHTML = `
+                <div class="key-container" style="width:100%">
+                    <div class="sc-iidyiZ jXZPoB"><span class="sc-jRQBWg hEGTwu">Connected From</span></div>
+                    ${elementFromListDiv.join('')}
+                </div>
+            `
+	connectToPannel.appendChild(div)
+	console.log(elementFromList)
+	console.log(connected_from)
+}
+
+var observerTestChild = new MutationObserver((mutationsList, observer) => {
+	for (let mutation of mutationsList) {
+		console.log('second mutation')
+		console.log(mutation.target.data)
+		const elementName = mutation.target.data
+		createConnectedFrom(elementName)
+
+	}
+});
+
+var newDOMToObs = document.querySelector(".jXZPoB > span");
+if (newDOMToObs) {
+	observerTestChild.observe(newDOMToObs, { characterData: true, attributes: false, childList: true, subtree: true });
+}
+
+var connectTo = document.getElementsByClassName('gXgqKp')[0]
+// Create a MutationObserver instance
+let observerTest = new MutationObserver((mutationsList, observer) => {
+	for (let mutation of mutationsList) {
+		console.log(mutation)
+		if (connectTo.innerHTML == '') {
+			console.log('empty')
+			observerTestChild.disconnect()
+		} else {
+			console.log('not empty')
+			newDOMToObs = document.querySelector(".jXZPoB > span");
+			console.log(newDOMToObs)
+			const elementName = newDOMToObs.innerHTML.replace('Keys', '').trim()
+			console.log(elementName)
+			createConnectedFrom(elementName)
+			observerTestChild.observe(newDOMToObs, { characterData: true, attributes: false, childList: true, subtree: true });
+		}
+	}
+});
+observerTest.observe(connectTo, { childList: true, subtree: false });
