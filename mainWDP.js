@@ -6,9 +6,6 @@ setInterval(function()
 {
 	if (currentPage != location.href)
 	{
-		// page has changed, set new page as 'current'
-		currentPage = location.href;
-		path = decodeURI(document.location.pathname);
 		if(currentPage.includes('node')||currentPage.includes('transition')) {
 			console.log("current page:" + currentPage);
 			let flowName = path.split('/')[2].replace('Cancellation ', '');
@@ -18,6 +15,8 @@ setInterval(function()
 			document.title = flowName
 			//location.reload();
 		}
+		currentPage = location.href;
+		path = decodeURI(document.location.pathname);
 	}
 }, 500);
 
