@@ -64,6 +64,7 @@ updateTabName();
 setInterval(function()
 {
 	if (currentPage != location.href) { // page changed
+		currentPage = location.href;
 		updateTabName();
 		if(currentPage.includes('node')||currentPage.includes('transition')) {
 			// auto-refresh page if its in the node editor or transition editor (changes only get applied after a refresh)
