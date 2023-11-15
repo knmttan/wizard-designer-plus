@@ -34,7 +34,7 @@ function updateTabName() {
 		} else if (currPath.split('/')[1].includes('deploy')) { // deployment page
 			setFavicons('https://cdn-icons-png.flaticon.com/128/4471/4471714.png')
 			document.title = 'Deploy';
-		} else if(currentPage=="https://qa-wizard-designer.agoda.local/") { // home page
+		} else if(currPage=="https://qa-wizard-designer.agoda.local/") { // home page
 			setFavicons('https://cdn-icons-png.flaticon.com/128/1680/1680365.png');
 			document.title = "Wizard Flow Designer";
 		}
