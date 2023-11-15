@@ -1,22 +1,74 @@
+// functions to set tab name and favicon
+function setFavicons(favImg) {
+	let headTitle = document.querySelector('head');
+	let setFavicon = document.createElement('link');
+	setFavicon.setAttribute('rel', 'shortcut icon');
+	setFavicon.setAttribute('href', favImg);
+	headTitle.appendChild(setFavicon);
+}
 
+function removeElementsByClass(className) {
+	const elements = document.getElementsByClassName(className);
+	while (elements.length > 0) {
+		elements[0].parentNode.removeChild(elements[0]);
+	}
+}
+
+function updateTabName(currPage, currPath) {
+	const currPage = location.href;
+	const currPath = decodeURI(document.location.pathname);
+	const currHost = document.location.host;
+	// first check if we are in the designer tool or debugger
+	if (currHost.match(".*wizard-designer.agoda.local.*")) { // designer tool
+		// use flow name if user is in transition or node editor
+		if(currPage.includes('node')||currPage.includes('transition')) { // flow editor pages
+			let flowName = currPath.split('/')[2].replace('Cancellation ', '');
+			while(flowName.length>30) {
+				flowName = flowName.split(' ').slice(1).join(' ');
+			}
+			setFavicons('https://cdn-icons-png.flaticon.com/128/1680/1680365.png');
+			document.title = flowName;
+		} else if (currPath.split('/')[1] == 'integrationPoint') { // API Builder page
+			setFavicons('https://cdn-icons-png.flaticon.com/128/9110/9110100.png')
+			document.title = 'API builder';
+		} else if (currPath.split('/')[1].includes('deploy')) { // deployment page
+			setFavicons('https://cdn-icons-png.flaticon.com/128/4471/4471714.png')
+			document.title = 'Deploy';
+		} else if(currentPage=="https://qa-wizard-designer.agoda.local/") { // home page
+			setFavicons('https://cdn-icons-png.flaticon.com/128/1680/1680365.png');
+			document.title = "Wizard Flow Designer";
+		}
+	} else if (currHost.match(".*agoda.*\/wizard\/debug.*")) { // debugger pages
+		setFavicons('https://cdn-icons-png.flaticon.com/128/1541/1541402.png');
+		// for agent debugger, this works fine
+		let flowName = document.getElementsByClassName("title")[0].children.item(0).innerText
+		// for vivr debugger, the title is set by react, need to apply a mutation observer to capture it
+		if(currHost.match(".*visual-ivr.*")) {
+			const titleElement = document.getElementsByClassName("title")[0].children.item(0)
+			const title_observer = new MutationObserver(getTitle);
+			function getTitle(mutations, observer) {
+			  flowName = titleElement.innerText;
+			  document.title = 'Debug ' + flowName;
+			  title_observer.disconnect();
+			}
+			title_observer.observe(titleElement, { subtree: false, childList: true });
+		}
+		document.title = 'Debug ' + flowName;
+		removeElementsByClass('footer-container');
+	}
+}
+
+// Set function that runs every 500ms to check for a change in pages
 let currentPage = location.href;
-let path = decodeURI(document.location.pathname);
-// auto-refresh page if its in the node editor or transition editor (changes only get applied after a refresh)
 setInterval(function()
 {
 	if (currentPage != location.href)
 	{
+		updateTabName();
 		if(currentPage.includes('node')||currentPage.includes('transition')) {
-			console.log("current page:" + currentPage);
-			let flowName = path.split('/')[2].replace('Cancellation ', '');
-			while(flowName.length>30) {
-				flowName = flowName.split(' ').slice(1).join(' ');
-			}
-			document.title = flowName
-			//location.reload();
+			// auto-refresh page if its in the node editor or transition editor (changes only get applied after a refresh)
+			location.reload();
 		}
-		currentPage = location.href;
-		path = decodeURI(document.location.pathname);
 	}
 }, 500);
 
@@ -28,7 +80,7 @@ if(currentPage.includes('node')) {
 		//skip confirmation pop up except transition
 		const realConfirm=window.confirm;
 		
-		if (path.split('/')[1] != 'transition'){
+		if (decodeURI(document.location.pathname).split('/')[1] != 'transition'){
 			window.confirm=function(){
 				return true;
 			};
@@ -101,68 +153,6 @@ if(currentPage.includes('node')) {
 		console.log("ERROR")
 	}
 }
-
-
-//change title to flow name
-/*if (['node', 'transition'].includes(path.split('/')[1])) {
-    let flowName = path.split('/')[2].replace('Cancellation ', '');
-    while(flowName.length>30) {
-	    flowName = flowName.split(' ').slice(1).join(' ');
-    }
-    document.title = flowName
-}*/
-console.log("before current page and page is: " + currentPage);
-if (currentPage=="https://qa-wizard-designer.agoda.local/") {
-	document.title = "Wizard Designer";
-}
-function setFavicons(favImg) {
-	let headTitle = document.querySelector('head');
-	let setFavicon = document.createElement('link');
-	setFavicon.setAttribute('rel', 'shortcut icon');
-	setFavicon.setAttribute('href', favImg);
-	headTitle.appendChild(setFavicon);
-}
-
-function removeElementsByClass(className) {
-	const elements = document.getElementsByClassName(className);
-	while (elements.length > 0) {
-		elements[0].parentNode.removeChild(elements[0]);
-	}
-}
-
-
-
-// change icon
-if (document.location.host.match(".*wizard-designer.agoda.local.*")) {
-	if (document.location.pathname.split('/')[1] == 'integrationPoint') {
-		setFavicons('https://cdn-icons-png.flaticon.com/128/9110/9110100.png')
-		document.title = 'API builder';
-	} else if (document.location.pathname.split('/')[1].includes('deploy')) {
-		setFavicons('https://cdn-icons-png.flaticon.com/128/4471/4471714.png')
-		document.title = 'Deploy';
-	} else {
-		setFavicons('https://cdn-icons-png.flaticon.com/128/1680/1680365.png');
-	}
-} else if (window.location.href.match(".*agoda.*\/wizard.*")) {
-	setFavicons('https://cdn-icons-png.flaticon.com/128/1541/1541402.png');
-	// for agent debugger, this works fine
-	let flowName = document.getElementsByClassName("title")[0].children.item(0).innerText
-	// for vivr debugger, the title is set by react, need to apply a mutation observer to capture it
-	if(document.location.host.match(".*visual-ivr.*")) {
-		const titleElement = document.getElementsByClassName("title")[0].children.item(0)
-		const title_observer = new MutationObserver(getTitle);
-		function getTitle(mutations, observer) {
-		  flowName = titleElement.innerText;
-		  document.title = 'Debug ' + flowName;
-		  title_observer.disconnect();
-		}
-		title_observer.observe(titleElement, { subtree: false, childList: true });
-	}
-	document.title = 'Debug ' + flowName;
-	removeElementsByClass('footer-container')
-}
-
-
 
 // remove preview container if only logic
 if (document.getElementsByClassName('preview-container').length > 0) {
