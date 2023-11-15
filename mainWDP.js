@@ -11,7 +11,7 @@ setInterval(function()
 		path = decodeURI(document.location.pathname);
 		if(currentPage.includes('node')||currentPage.includes('transition')) {
 			console.log("current page:" + currentPage);
-			let flowName = currentPage.split('/')[2].replace('Cancellation ', '');
+			let flowName = path.split('/')[2].replace('Cancellation ', '');
 			while(flowName.length>30) {
 				flowName = flowName.split(' ').slice(1).join(' ');
 			}
@@ -111,10 +111,11 @@ if(currentPage.includes('node')) {
 	    flowName = flowName.split(' ').slice(1).join(' ');
     }
     document.title = flowName
-}
+}*/
+console.log("before current page and page is: " + currentPage);
 if (currentPage=="https://qa-wizard-designer.agoda.local/") {
 	document.title = "Wizard Designer";
-}*/
+}
 function setFavicons(favImg) {
 	let headTitle = document.querySelector('head');
 	let setFavicon = document.createElement('link');
