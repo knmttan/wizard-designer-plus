@@ -1,5 +1,6 @@
 
 let currentPage = location.href;
+let path = decodeURI(document.location.pathname);
 // auto-refresh page if its in the node editor or transition editor (changes only get applied after a refresh)
 setInterval(function()
 {
@@ -7,9 +8,10 @@ setInterval(function()
 	{
 		// page has changed, set new page as 'current'
 		currentPage = location.href;
+		path = decodeURI(document.location.pathname);
 		if(currentPage.includes('node')||currentPage.includes('transition')) {
-			console.log(currentPage);
-			let flowName = path.split('/')[2].replace('Cancellation ', '');
+			console.log("current page:" + currentPage);
+			let flowName = currentPage.split('/')[2].replace('Cancellation ', '');
 			while(flowName.length>30) {
 				flowName = flowName.split(' ').slice(1).join(' ');
 			}
@@ -21,7 +23,6 @@ setInterval(function()
 
 
 // Fast save code below
-const path = decodeURI(document.location.pathname);
 // First check if we are on the node editor page, for performance reasons because we set a mutation observer
 if(currentPage.includes('node')) {
 	try {
