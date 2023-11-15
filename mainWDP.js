@@ -16,7 +16,6 @@ setInterval(function()
 			document.title = flowName
 			//location.reload();
 		}
-}
 	}
 }, 500);
 
