@@ -14,7 +14,7 @@ function removeElementsByClass(className) {
 	}
 }
 
-function updateTabName(currPage, currPath) {
+function updateTabName() {
 	const currPage = location.href;
 	const currPath = decodeURI(document.location.pathname);
 	const currHost = document.location.host;
