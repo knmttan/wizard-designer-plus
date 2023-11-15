@@ -105,6 +105,7 @@ if (['node', 'transition'].includes(path.split('/')[1])) {
     }
     document.title = flowName
 }
+if (currentPage=="https://qa-wizard-designer.agoda.local/") document.title = "Wizard Designer";
 function setFavicons(favImg) {
 	let headTitle = document.querySelector('head');
 	let setFavicon = document.createElement('link');
