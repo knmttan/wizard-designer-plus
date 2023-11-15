@@ -8,8 +8,15 @@ setInterval(function()
 		// page has changed, set new page as 'current'
 		currentPage = location.href;
 		if(currentPage.includes('node')||currentPage.includes('transition')) {
-			location.reload();
+			console.log(currentPage);
+			let flowName = path.split('/')[2].replace('Cancellation ', '');
+			while(flowName.length>30) {
+				flowName = flowName.split(' ').slice(1).join(' ');
+			}
+			document.title = flowName
+			//location.reload();
 		}
+}
 	}
 }, 500);
 
@@ -98,14 +105,16 @@ if(currentPage.includes('node')) {
 
 
 //change title to flow name
-if (['node', 'transition'].includes(path.split('/')[1])) {
+/*if (['node', 'transition'].includes(path.split('/')[1])) {
     let flowName = path.split('/')[2].replace('Cancellation ', '');
     while(flowName.length>30) {
 	    flowName = flowName.split(' ').slice(1).join(' ');
     }
     document.title = flowName
 }
-if (currentPage=="https://qa-wizard-designer.agoda.local/") document.title = "Wizard Designer";
+if (currentPage=="https://qa-wizard-designer.agoda.local/") {
+	document.title = "Wizard Designer";
+}*/
 function setFavicons(favImg) {
 	let headTitle = document.querySelector('head');
 	let setFavicon = document.createElement('link');
