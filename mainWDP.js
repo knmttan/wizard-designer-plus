@@ -182,86 +182,86 @@ if(currentPage.includes('node')) {
 			let code = document.getElementsByClassName('logic-editor')[0];
 			code.style = '';
 		};
-	}
 
-	if (document.getElementsByClassName('preview-container')[0].textContent == 'PreviewPreview not available') {
-		expandLogic();
-	}
-
-	// document.addEventListener('keydown', handleKeyDown);
-	// document.addEventListener('keyup', (event) => {
-	// 	delete keysPressed[event.key];
-	// });
-
-	if (document.querySelector('.expendHide') === null) {
-		console.log('expandHide not found');
-		var htmlString = `
-	<svg id="expandDown" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="cursor: pointer"><path d="M13.416 17.998a2 2 0 0 1-2.828 0l-.004-.005-9.377-9.436A1.5 1.5 0 0 1 2.27 6h19.522a1.5 1.5 0 0 1 1.06 2.56l-9.437 9.438z"></path></svg>
-	<svg id="expandReset" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="cursor: pointer"><path d="M12 0c6.602 0 12 5.398 12 12s-5.398 12-12 12S0 18.602 0 12 5.398 0 12 0zM6.741 12.928l10.48-.001c1.333 0 1.332-2 0-2l-10.48.001c-1.334 0-1.333 2 0 2z"></path></svg>
-	<svg id="expandUp" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="cursor: pointer"><path d="M13.078 5.676a1.5 1.5 0 0 0-2.12-.034l-.037.037-9.757 10.136a1.5 1.5 0 0 0 1.08 2.54H21.82a1.5 1.5 0 0 0 1.078-2.544L13.078 5.676z"></path></svg>
-`;
-		var div = document.createElement('div');
-		div.classList.add('expendHide');
-		div.style.textAlign = 'center';
-		var div1 = document.querySelector('.preview-container');
-		div1.style.marginBottom = 0;
-		div.innerHTML = htmlString;
-		div1.after(div);
-
-		div.querySelector('#expandDown').onclick = function () { expandPreview() };
-		div.querySelector('#expandReset').onclick = function () { expandReset() };
-		div.querySelector('#expandUp').onclick = function () { expandLogic() };
-	}
-
-	try {
-		if (document.getElementsByClassName('interactive-input').length > 0) {
-			const expandYml = () => {
-				let preview = document.getElementsByClassName('yml-editor')[0];
-				preview.style.height = '95%';
-				let code = document.getElementsByClassName('interactive-input')[0];
-				code.style.height = 0;
-			};
-			const expandGpt = () => {
-				let preview = document.getElementsByClassName('yml-editor')[0];
-				preview.style.height = 0;
-				let code = document.getElementsByClassName('interactive-input')[0];
-				code.style.height = '70%';
-				code.style.width = '100%';
-				let gpt = document.getElementsByClassName('releaseNotesText')[0]
-				gpt.style = "height: 90% !important; resize: none;"
-			};
-			const expandResetGpt = () => {
-				let preview = document.getElementsByClassName('yml-editor')[0];
-				preview.style = '';
-				preview.style.marginBottom = 0;
-				let code = document.getElementsByClassName('interactive-input')[0];
-				code.style = '';
-			};
-
-			expandYml()
-
-			if (document.querySelector('.expendHideGpt') === null) {
-				console.log('expandHideGpt not found');
-				var htmlString = `
-				<svg id="expandDownGpt" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="cursor: pointer"><path d="M13.416 17.998a2 2 0 0 1-2.828 0l-.004-.005-9.377-9.436A1.5 1.5 0 0 1 2.27 6h19.522a1.5 1.5 0 0 1 1.06 2.56l-9.437 9.438z"></path></svg>
-				<svg id="expandResetGpt" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="cursor: pointer"><path d="M12 0c6.602 0 12 5.398 12 12s-5.398 12-12 12S0 18.602 0 12 5.398 0 12 0zM6.741 12.928l10.48-.001c1.333 0 1.332-2 0-2l-10.48.001c-1.334 0-1.333 2 0 2z"></path></svg>
-				<svg id="expandUpGpt" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="cursor: pointer"><path d="M13.078 5.676a1.5 1.5 0 0 0-2.12-.034l-.037.037-9.757 10.136a1.5 1.5 0 0 0 1.08 2.54H21.82a1.5 1.5 0 0 0 1.078-2.544L13.078 5.676z"></path></svg>
-			`;
-				var div = document.createElement('div');
-				div.classList.add('expendHideGpt');
-				div.style.textAlign = 'center';
-				var div1 = document.querySelector('.yml-editor');
-				div1.style.marginBottom = 0;
-				div.innerHTML = htmlString;
-				div1.after(div);
-
-				div.querySelector('#expandDownGpt').onclick = function () { expandYml() };
-				div.querySelector('#expandResetGpt').onclick = function () { expandResetGpt() };
-				div.querySelector('#expandUpGpt').onclick = function () { expandGpt() };
-			}
+		if (document.getElementsByClassName('preview-container')[0].textContent == 'PreviewPreview not available') {
+			expandLogic();
 		}
-	} catch (e) {
-		console.log('resizing gpt error\n' + e)
+	
+		// document.addEventListener('keydown', handleKeyDown);
+		// document.addEventListener('keyup', (event) => {
+		// 	delete keysPressed[event.key];
+		// });
+
+		if (document.querySelector('.expendHide') === null) {
+			console.log('expandHide not found');
+			var htmlString = `
+		<svg id="expandDown" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="cursor: pointer"><path d="M13.416 17.998a2 2 0 0 1-2.828 0l-.004-.005-9.377-9.436A1.5 1.5 0 0 1 2.27 6h19.522a1.5 1.5 0 0 1 1.06 2.56l-9.437 9.438z"></path></svg>
+		<svg id="expandReset" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="cursor: pointer"><path d="M12 0c6.602 0 12 5.398 12 12s-5.398 12-12 12S0 18.602 0 12 5.398 0 12 0zM6.741 12.928l10.48-.001c1.333 0 1.332-2 0-2l-10.48.001c-1.334 0-1.333 2 0 2z"></path></svg>
+		<svg id="expandUp" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="cursor: pointer"><path d="M13.078 5.676a1.5 1.5 0 0 0-2.12-.034l-.037.037-9.757 10.136a1.5 1.5 0 0 0 1.08 2.54H21.82a1.5 1.5 0 0 0 1.078-2.544L13.078 5.676z"></path></svg>
+	`;
+			var div = document.createElement('div');
+			div.classList.add('expendHide');
+			div.style.textAlign = 'center';
+			var div1 = document.querySelector('.preview-container');
+			div1.style.marginBottom = 0;
+			div.innerHTML = htmlString;
+			div1.after(div);
+
+			div.querySelector('#expandDown').onclick = function () { expandPreview() };
+			div.querySelector('#expandReset').onclick = function () { expandReset() };
+			div.querySelector('#expandUp').onclick = function () { expandLogic() };
+		}
+
+		try {
+			if (document.getElementsByClassName('interactive-input').length > 0) {
+				const expandYml = () => {
+					let preview = document.getElementsByClassName('yml-editor')[0];
+					preview.style.height = '95%';
+					let code = document.getElementsByClassName('interactive-input')[0];
+					code.style.height = 0;
+				};
+				const expandGpt = () => {
+					let preview = document.getElementsByClassName('yml-editor')[0];
+					preview.style.height = 0;
+					let code = document.getElementsByClassName('interactive-input')[0];
+					code.style.height = '70%';
+					code.style.width = '100%';
+					let gpt = document.getElementsByClassName('releaseNotesText')[0]
+					gpt.style = "height: 90% !important; resize: none;"
+				};
+				const expandResetGpt = () => {
+					let preview = document.getElementsByClassName('yml-editor')[0];
+					preview.style = '';
+					preview.style.marginBottom = 0;
+					let code = document.getElementsByClassName('interactive-input')[0];
+					code.style = '';
+				};
+
+				expandYml()
+
+				if (document.querySelector('.expendHideGpt') === null) {
+					console.log('expandHideGpt not found');
+					var htmlString = `
+					<svg id="expandDownGpt" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="cursor: pointer"><path d="M13.416 17.998a2 2 0 0 1-2.828 0l-.004-.005-9.377-9.436A1.5 1.5 0 0 1 2.27 6h19.522a1.5 1.5 0 0 1 1.06 2.56l-9.437 9.438z"></path></svg>
+					<svg id="expandResetGpt" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="cursor: pointer"><path d="M12 0c6.602 0 12 5.398 12 12s-5.398 12-12 12S0 18.602 0 12 5.398 0 12 0zM6.741 12.928l10.48-.001c1.333 0 1.332-2 0-2l-10.48.001c-1.334 0-1.333 2 0 2z"></path></svg>
+					<svg id="expandUpGpt" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="cursor: pointer"><path d="M13.078 5.676a1.5 1.5 0 0 0-2.12-.034l-.037.037-9.757 10.136a1.5 1.5 0 0 0 1.08 2.54H21.82a1.5 1.5 0 0 0 1.078-2.544L13.078 5.676z"></path></svg>
+				`;
+					var div = document.createElement('div');
+					div.classList.add('expendHideGpt');
+					div.style.textAlign = 'center';
+					var div1 = document.querySelector('.yml-editor');
+					div1.style.marginBottom = 0;
+					div.innerHTML = htmlString;
+					div1.after(div);
+
+					div.querySelector('#expandDownGpt').onclick = function () { expandYml() };
+					div.querySelector('#expandResetGpt').onclick = function () { expandResetGpt() };
+					div.querySelector('#expandUpGpt').onclick = function () { expandGpt() };
+				}
+			}
+		} catch (e) {
+			console.log('resizing gpt error\n' + e)
+		}
 	}
 }
 
