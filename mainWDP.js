@@ -69,13 +69,13 @@ setInterval(function()
 	if (currentPage != location.href) { // page changed
 		try {
 			const flowName = decodeURI(location.pathname.split('/')[2])
-			window.sessionStorage.setItem('selectedFlow', flowName);
+			window.localStorage.setItem('selectedFlow', flowName);
 		} catch {
 			console.log('error setting flow name in session storage')
 		}
 		currentPage = location.href;
 		updateTabName();
-		if (currentPage.includes('node') || currentPage.includes('transition')) {
+		if (currentPage.includes('node') || currentPage.includes('transition') || location.href == 'https://qa-wizard-designer.agoda.local/') {
 			// auto-refresh page if its in the node editor or transition editor (changes only get applied after a refresh)
 			location.reload();
 		}
@@ -440,15 +440,14 @@ if (false && document.location.href == 'https://qa-wizard-designer.agoda.local/'
 	document.body.appendChild(snowFlakeDiv)
 }
 
-if (document.location.href == 'https://qa-wizard-designer.agoda.local/' && 
-		!!window.sessionStorage.selectedFlow && 
-		window.sessionStorage.selectedFlow != '') {
-	const flowName = window.sessionStorage.selectedFlow
+
+const selectedFlow = window.localStorage.selectedFlow
+if (document.location.href == 'https://qa-wizard-designer.agoda.local/' && !!selectedFlow && selectedFlow != '') {
 	function waitForElement(selector, callback) {
 		const searchBox = document.querySelector('.global-search-input');
 		if (searchBox) {
 			console.log('test');
-			callback(searchBox, flowName);
+			callback(searchBox, selectedFlow);
 		} else {
 			setTimeout(() => {
 				waitForElement(selector, callback);
