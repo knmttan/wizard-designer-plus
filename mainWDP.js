@@ -67,9 +67,15 @@ updateTabName();
 setInterval(function()
 {
 	if (currentPage != location.href) { // page changed
+		try {
+			const flowName = decodeURI(location.pathname.split('/')[2])
+			window.sessionStorage.setItem('selectedFlow', flowName);
+		} catch {
+			console.log('error setting flow name in session storage')
+		}
 		currentPage = location.href;
 		updateTabName();
-		if(currentPage.includes('node')||currentPage.includes('transition')) {
+		if (currentPage.includes('node') || currentPage.includes('transition')) {
 			// auto-refresh page if its in the node editor or transition editor (changes only get applied after a refresh)
 			location.reload();
 		}
@@ -432,4 +438,41 @@ if (false && document.location.href == 'https://qa-wizard-designer.agoda.local/'
     `
 	snowFlakeDiv.innerHTML = snowHTML
 	document.body.appendChild(snowFlakeDiv)
+}
+
+if (document.location.href == 'https://qa-wizard-designer.agoda.local/' && window.sessionStorage.selectedFlow != '') {
+	const flowName = window.sessionStorage.selectedFlow
+	function waitForElement(selector, callback) {
+		const searchBox = document.querySelector('.global-search-input');
+		if (searchBox) {
+			console.log('test');
+			callback(searchBox, flowName);
+		} else {
+			setTimeout(() => {
+				waitForElement(selector, callback);
+			}, 100);
+		}
+	}
+
+	function changeInputValue(elm, value) {
+		const lastValue = elm.value;
+		elm.value = value;
+		const event = new Event('input', { bubbles: true });
+		event.simulated = true;
+		const tracker = elm._valueTracker;
+		if (tracker) {
+			tracker.setValue(lastValue);
+		}
+		elm.dispatchEvent(event);
+	}
+
+	waitForElement('.global-search-input', function simulateTyping(inputField, text, index = 0) {
+		if (index >= text.length) {
+			return;
+		}
+		changeInputValue(inputField, text.substring(0, index + 1));
+		setTimeout(() => {
+			simulateTyping(inputField, text, index + 1);
+		}, 5); // delay between keystrokes, you might need to adjust this value based on your debounce timing
+	});
 }
