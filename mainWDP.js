@@ -440,7 +440,9 @@ if (false && document.location.href == 'https://qa-wizard-designer.agoda.local/'
 	document.body.appendChild(snowFlakeDiv)
 }
 
-if (document.location.href == 'https://qa-wizard-designer.agoda.local/' && window.sessionStorage.selectedFlow != '') {
+if (document.location.href == 'https://qa-wizard-designer.agoda.local/' && 
+		!!window.sessionStorage.selectedFlow && 
+		window.sessionStorage.selectedFlow != '') {
 	const flowName = window.sessionStorage.selectedFlow
 	function waitForElement(selector, callback) {
 		const searchBox = document.querySelector('.global-search-input');
