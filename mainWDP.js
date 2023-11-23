@@ -69,7 +69,7 @@ setInterval(function()
 	if (currentPage != location.href) { // page changed
 		try {
 			const flowName = decodeURI(location.pathname.split('/')[2])
-			window.localStorage.setItem('selectedFlow', flowName);
+			if (!!flowName && typeof (flowName) == 'string' && flowName.length>0) window.localStorage.setItem('selectedFlow', flowName);
 		} catch {
 			console.log('error setting flow name in session storage')
 		}
