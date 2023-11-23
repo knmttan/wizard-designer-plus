@@ -388,7 +388,7 @@ if (currentPage.includes('transition')) {
 	observerTest.observe(connectTo, { childList: true, subtree: false });
 }
 
-if (document.location.href == 'https://qa-wizard-designer.agoda.local/') {
+if (false && document.location.href == 'https://qa-wizard-designer.agoda.local/') {
 	var styles = `
         .intro,
         .intro a{
