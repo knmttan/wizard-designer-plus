@@ -19,7 +19,7 @@ function updateTabName() {
 	const currPath = decodeURI(document.location.pathname);
 	const currHost = document.location.host;
 	// first check if we are in the designer tool or debugger
-	if (currHost.match(".*wizard-designer.agoda.local.*")) { // designer tool
+	if (currHost.match(".*wizard-designer.*")) { // designer tool
 		// use flow name if user is in transition or node editor
 		if(currPage.includes('node')||currPage.includes('transition')) { // flow editor pages
 			let flowName = currPath.split('/')[2].replace('Cancellation ', '');
@@ -37,7 +37,7 @@ function updateTabName() {
 		} else if (currPath.split('/')[1].includes('workflowTable')) { // deployment page
 			setFavicons('https://cdn-icons-png.flaticon.com/128/4471/4471714.png')
 			document.title = 'Workflow Table';
-		} else if(currPage=="https://qa-wizard-designer.agoda.local/") { // home page
+		} else if(currPage=="https://qa-wizard-designer.agoda.local/" || currPage=="https://wizard-designer-pc.qa.agoda.is/") { // home page
 			setFavicons('https://cdn-icons-png.flaticon.com/128/1680/1680365.png');
 			document.title = "Wizard Flow Designer";
 		}
