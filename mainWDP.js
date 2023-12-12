@@ -93,12 +93,14 @@ if(currentPage.includes('node')) {
 		}
 		//skip save description
 		let saveDescNode = null;
-		let display = '';
-		const observer = new MutationObserver(function(mutations_list) {
-			mutations_list.forEach(function(mutation) {
-				mutation.addedNodes.forEach(function(added_node) {
-					if(added_node.role == 'presentation') {
-						if(added_node.innerText.indexOf('Update element description') !== -1) {
+		let display = 'none';
+		const observer = new MutationObserver(function (mutations_list) {
+			mutations_list.forEach(function (mutation) {
+				mutation.addedNodes.forEach(function (added_node_parent) {
+					var added_node = added_node_parent.childNodes[0]
+					console.log(added_node.innerText)
+					if (added_node.role == 'dialog') {
+						if (added_node.innerText.indexOf('Update element description') !== -1) {
 							saveDescNode = added_node;
 							saveDescNode.style.display = display;
 						}
