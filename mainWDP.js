@@ -351,7 +351,7 @@ if (currentPage.includes('transition')) {
 	
 		div.innerHTML = `
 	                <div class="key-container" style="width:100%">
-	                    <div class="sc-iidyiZ jXZPoB"><span class="sc-jRQBWg hEGTwu">Connected From</span></div>
+	                    <div class="sc-iidyiZ dOTjLj"><span class="sc-jRQBWg hEGTwu">Connected From</span></div>
 	                    ${elementFromListDiv.join('')}
 	                </div>
 	            `
@@ -366,19 +366,19 @@ if (currentPage.includes('transition')) {
 		}
 	});
 	
-	var newDOMToObs = document.querySelector(".jXZPoB > span");
+	var newDOMToObs = document.querySelector(".dOTjLj > span");
 	if (newDOMToObs) {
 		observerTestChild.observe(newDOMToObs, { characterData: true, attributes: false, childList: true, subtree: true });
 	}
 	
-	var connectTo = document.getElementsByClassName('gXgqKp')[0]
+	var connectTo = document.getElementsByClassName('dNQSSg')[0]
 	// Create a MutationObserver instance
 	let observerTest = new MutationObserver((mutationsList, observer) => {
 		for (let mutation of mutationsList) {
 			if (connectTo.innerHTML == '') {
 				observerTestChild.disconnect()
 			} else {
-				newDOMToObs = document.querySelector(".jXZPoB > span");
+				newDOMToObs = document.querySelector(".dOTjLj > span");
 				const elementName = newDOMToObs.innerHTML.replace('Keys', '').trim()
 				createConnectedFrom(elementName)
 				observerTestChild.observe(newDOMToObs, { characterData: true, attributes: false, childList: true, subtree: true });
