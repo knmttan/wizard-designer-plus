@@ -156,6 +156,17 @@ if(currentPage.includes('node')) {
 				}
 			});
 
+			const handleKeyDown = (event) => {
+				keysPressed[event.key] = true;
+				if (keysPressed['Alt']&& event.code == 'KeyS') saveChangesButton.click();
+			}
+
+			document.addEventListener('keydown', handleKeyDown);
+			document.addEventListener('keyup', (event) => {
+				delete keysPressed[event.key];
+			});
+
+
 	} catch(e) {
 		console.log(e)
 		console.log("ERROR")
