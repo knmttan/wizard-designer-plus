@@ -127,44 +127,44 @@ if(currentPage.includes('node')) {
 		parentUl.appendChild(newSaveDescriptionLi);
 		parentUl.appendChild(saveButtonLi);
 		
-		
-			const saveChangesButton = saveButtonLi.getElementsByTagName('button')[0];
-			const saveDescriptionButton = newSaveDescriptionLi.getElementsByTagName('button')[0];
-		
-			let saveDescriptionClicked = false;
-			saveDescriptionButton.addEventListener("click", function() {
-				saveDescriptionClicked = true;
-				saveChangesButton.click()
-				saveDescriptionClicked = false;
-			});
-		
-			saveChangesButton.addEventListener("click", function() {
-				if(saveDescNode) {
-					if(saveDescriptionClicked) {
-						display = '';
-						saveDescNode.style.display = '';
-					} else {
-						display = 'none';
-						saveDescNode.style.display = 'none';
-					}
+		var keysPressed = {};
+		const saveChangesButton = saveButtonLi.getElementsByTagName('button')[0];
+		const saveDescriptionButton = newSaveDescriptionLi.getElementsByTagName('button')[0];
+	
+		let saveDescriptionClicked = false;
+		saveDescriptionButton.addEventListener("click", function() {
+			saveDescriptionClicked = true;
+			saveChangesButton.click()
+			saveDescriptionClicked = false;
+		});
+	
+		saveChangesButton.addEventListener("click", function() {
+			if(saveDescNode) {
+				if(saveDescriptionClicked) {
+					display = '';
+					saveDescNode.style.display = '';
 				} else {
-					if(saveDescriptionClicked) {
-						display = '';
-					} else {
-						display = 'none';
-					}
+					display = 'none';
+					saveDescNode.style.display = 'none';
 				}
-			});
-
-			const handleKeyDown = (event) => {
-				keysPressed[event.key] = true;
-				if (keysPressed['Alt']&& event.code == 'KeyS') saveChangesButton.click();
+			} else {
+				if(saveDescriptionClicked) {
+					display = '';
+				} else {
+					display = 'none';
+				}
 			}
+		});
 
-			document.addEventListener('keydown', handleKeyDown);
-			document.addEventListener('keyup', (event) => {
-				delete keysPressed[event.key];
-			});
+		const handleKeyDown = (event) => {
+			keysPressed[event.key] = true;
+			if (keysPressed['Alt']&& event.code == 'KeyS') saveChangesButton.click();
+		}
+
+		document.addEventListener('keydown', handleKeyDown);
+		document.addEventListener('keyup', (event) => {
+			delete keysPressed[event.key];
+		});
 
 
 	} catch(e) {
