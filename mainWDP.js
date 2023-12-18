@@ -277,6 +277,22 @@ if(currentPage.includes('node')) {
 		}
 	}
 
+	//add shortcut to comment shortcut to code mirror and set default value to return continue if empty 
+	try {
+		let cmInstance = document.querySelector('.logic-editor').querySelector('.CodeMirror').CodeMirror
+
+		if (cmInstance.getValue() === '') {
+			cmInstance.setValue("return 'continue';");
+		}
+
+		cmInstance.setOption("extraKeys", {
+			"Ctrl-/": "toggleComment",
+			"Cmd-/": "toggleComment"
+		});
+	} catch {
+		console.log('modify codemirror error');
+	}
+
 	
 }
 
