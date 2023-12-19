@@ -502,7 +502,7 @@ if (document.location.href == "https://wizard-designer-pc.qa.agoda.is/deploy") {
 							var table_preview = document.createElement("div");
 
 							new_div.className = "csv-table";
-							new_div.style.maxHeight = "500px";
+							new_div.style.maxHeight = "70%";
 							new_div.style.overflow = "auto";
 							new_div.style.width = "75%";
 							new_div.style.boxShadow = "0px 4px 8px 0px rgba(0,0,0,0.2)";
@@ -575,4 +575,12 @@ if (document.location.href == "https://wizard-designer-pc.qa.agoda.is/deploy") {
 
 	// Start observing the target node for configured mutations
 	observer.observe(targetNode, observerConfig);
+
+	try {
+		document.querySelector('.deploytitle').style = 'margin: 60px 5px 0px 0px !important;'
+		document.querySelector('.parent').style = 'width:90% !important;left:16% !important;'
+		document.querySelector('.deployFooter').style = 'height:60px !important;'
+	} catch (e) { 
+		console.log(e)
+	}
 }
