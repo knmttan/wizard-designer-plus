@@ -502,7 +502,7 @@ if (document.location.href == "https://wizard-designer-pc.qa.agoda.is/deploy") {
 							var table_preview = document.createElement("div");
 
 							new_div.className = "csv-table";
-							new_div.style.maxHeight = "70%";
+							new_div.style.maxHeight = "75%";
 							new_div.style.overflow = "auto";
 							new_div.style.width = "75%";
 							new_div.style.boxShadow = "0px 4px 8px 0px rgba(0,0,0,0.2)";
