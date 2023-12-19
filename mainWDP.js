@@ -579,7 +579,7 @@ if (document.location.href == "https://wizard-designer-pc.qa.agoda.is/deploy") {
 	try {
 		document.querySelector('.deploytitle').style = 'margin: 60px 5px 0px 0px !important;'
 		document.querySelector('.parent').style = 'width:90% !important;left:16% !important;'
-		document.querySelector('.deployFooter').style = 'height:60px !important;'
+		document.querySelector('.deployFooter').style = 'height:60px !important; bottom: 0px; position: fixed;'
 	} catch (e) { 
 		console.log(e)
 	}
