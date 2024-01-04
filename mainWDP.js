@@ -297,11 +297,11 @@ if(currentPage.includes('node')) {
 	
 }
 
-if (currPage.match(".*agoda.*\/wizard\/debug.*")) { // debugger pages
+if (currentPage.match(".*agoda.*\/wizard\/debug.*")) { // debugger pages
 	// Make element transitions in debugger vertical and wider
 	if (document.getElementById("debuggerviewcontainer")) {
 		let transitionsElementIndex = 3;
-		if(currHost.match(".*visual-ivr.*")) transitionsElementIndex = 2;
+		if(document.location.host.match(".*visual-ivr.*")) transitionsElementIndex = 2;
 		const ele = document.getElementById("debuggerviewcontainer").children.item(transitionsElementIndex).getElementsByClassName('content')[0].children.item(0);
 		ele.setAttribute("style", "flex-direction: column;");
 		const obs = new MutationObserver(function (mutations_list) {
