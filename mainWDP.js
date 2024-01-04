@@ -42,7 +42,6 @@ function updateTabName() {
 			document.title = "Wizard Flow Designer";
 		}
 	} else if (currPage.match(".*agoda.*\/wizard\/debug.*")) { // debugger pages
-		console.log("in debugger");
 		setFavicons('https://cdn-icons-png.flaticon.com/128/1541/1541402.png');
 		// for agent debugger, this works fine
 		let flowName = document.getElementsByClassName("title")[0].children.item(0).innerText
