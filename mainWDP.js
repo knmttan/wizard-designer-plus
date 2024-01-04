@@ -41,7 +41,7 @@ function updateTabName() {
 			setFavicons('https://cdn-icons-png.flaticon.com/128/1680/1680365.png');
 			document.title = "Wizard Flow Designer";
 		}
-	} else if (currHost.match(".*agoda.*\/wizard\/debug.*")) { // debugger pages
+	} else if (currPage.match(".*agoda.*\/wizard\/debug.*")) { // debugger pages
 		setFavicons('https://cdn-icons-png.flaticon.com/128/1541/1541402.png');
 		// for agent debugger, this works fine
 		let flowName = document.getElementsByClassName("title")[0].children.item(0).innerText
@@ -296,6 +296,23 @@ if(currentPage.includes('node')) {
 	
 }
 
+if (currentPage.match(".*agoda.*\/wizard\/debug.*")) { // debugger pages
+	// Make element transitions in debugger vertical and wider
+	if (document.getElementById("debuggerviewcontainer")) {
+		let transitionsElementIndex = 3;
+		if(document.location.host.match(".*visual-ivr.*")) transitionsElementIndex = 2;
+		const ele = document.getElementById("debuggerviewcontainer").children.item(transitionsElementIndex).getElementsByClassName('content')[0].children.item(0);
+		ele.setAttribute("style", "flex-direction: column;");
+		const obs = new MutationObserver(function (mutations_list) {
+			mutations_list.forEach(function (mutation) {
+				mutation.addedNodes.forEach(function (added_node) {
+					added_node.children.item(0).setAttribute("style", "height: 100%; width: 90%; padding-bottom: 20px;");
+				});
+			});
+		});
+		obs.observe(ele, { subtree: false, childList: true });
+	}
+}
 
 if (currentPage.includes('transition')) {
 	try {
@@ -312,22 +329,6 @@ if (currentPage.includes('transition')) {
 			const ele = elements[i];
 			ele.setAttribute("style", "overflow-y: visible; height: auto; border-bottom: 1px solid black");
 		};
-
-		// Make element transitions in debugger vertical and wider
-		if (document.getElementById("debuggerviewcontainer")) {
-			let transitionsElementIndex = 3;
-			if (document.location.host.match(".*visual-ivr.*")) transitionsElementIndex = 2;
-			const ele = document.getElementById("debuggerviewcontainer").children.item(transitionsElementIndex).getElementsByClassName('content')[0].children.item(0);
-			ele.setAttribute("style", "flex-direction: column;");
-			const obs = new MutationObserver(function (mutations_list) {
-				mutations_list.forEach(function (mutation) {
-					mutation.addedNodes.forEach(function (added_node) {
-						added_node.children.item(0).setAttribute("style", "height: 100%; width: 90%; padding-bottom: 20px;");
-					});
-				});
-			});
-			obs.observe(ele, { subtree: false, childList: true });
-		}
 	} catch (e) {
 		console.log('removing searchbar or remove element scroll or debugger vertical element error\n' + e)
 	}
