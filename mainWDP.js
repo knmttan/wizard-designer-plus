@@ -91,18 +91,20 @@ if(currentPage.includes('node')) {
 		} else {
 			window.confirm=realConfirm;
 		}
-		//skip save description
+		
+		// Hide save description box and move save result message to top of screen
 		let saveDescNode = null;
 		let display = 'none';
 		const observer = new MutationObserver(function (mutations_list) {
 			mutations_list.forEach(function (mutation) {
 				mutation.addedNodes.forEach(function (added_node_parent) {
 					var added_node = added_node_parent.childNodes[0]
-					console.log(added_node.innerText)
 					if (added_node.role == 'dialog') {
 						if (added_node.innerText.indexOf('Update element description') !== -1) {
 							saveDescNode = added_node;
 							saveDescNode.style.display = display;
+							const saveResult = document.querySelectorAll('div[type="toast"]')[0].parentElement;
+							saveResult.style.top = "5%";
 						}
 					}
 				});
@@ -111,33 +113,19 @@ if(currentPage.includes('node')) {
 		observer.observe(document.body, { subtree: false, childList: true });
 		
 		// Add save description button
+		const saveChangesButton = document.querySelectorAll('button[data-testid="header-save-button"]')[0];
+		const saveButtonParent = saveChangesButton.parentElement;
+		let saveDescriptionButton = saveChangesButton.cloneNode(true);
+		saveDescriptionButton.textContent = "Save Description";
+		saveButtonParent.insertBefore(saveDescriptionButton, saveChangesButton);
 		
-		const lis = document.getElementsByClassName("App")[0].getElementsByTagName('li');
-		let saveButtonLi = null;
-		for (var i = 0; lis[i]; i++) {
-			if(lis[i].innerText=="Save changes") {
-				saveButtonLi = lis[i];
-			}
-		}
-		const parentUl = saveButtonLi.parentNode;
-		let newSaveDescriptionLi = document.createElement("li");
-		newSaveDescriptionLi.innerHTML = saveButtonLi.innerHTML;
-		const txt = newSaveDescriptionLi.getElementsByTagName('span')[0];
-		txt.textContent = "Save description";
-		parentUl.appendChild(newSaveDescriptionLi);
-		parentUl.appendChild(saveButtonLi);
-		
-		var keysPressed = {};
-		const saveChangesButton = saveButtonLi.getElementsByTagName('button')[0];
-		const saveDescriptionButton = newSaveDescriptionLi.getElementsByTagName('button')[0];
-	
 		let saveDescriptionClicked = false;
 		saveDescriptionButton.addEventListener("click", function() {
 			saveDescriptionClicked = true;
 			saveChangesButton.click()
 			saveDescriptionClicked = false;
 		});
-	
+		
 		saveChangesButton.addEventListener("click", function() {
 			if(saveDescNode) {
 				if(saveDescriptionClicked) {
@@ -165,117 +153,31 @@ if(currentPage.includes('node')) {
 		document.addEventListener('keyup', (event) => {
 			delete keysPressed[event.key];
 		});
-
-
 	} catch(e) {
 		console.log(e)
 		console.log("ERROR")
 	}
 
-	// remove preview container if only logic
-	if (document.getElementsByClassName('preview-container').length > 0) {
-		// add button and kb shortcut in designer to expand logic or preview
-		let keysPressed = {};
-		const expandLogic = () => {
-			let preview = document.getElementsByClassName('preview-container')[0];
-			preview.style.height = 0;
-			let code = document.getElementsByClassName('logic-editor')[0];
-			code.style.height = '100%';
-		};
-		const expandPreview = () => {
-			let preview = document.getElementsByClassName('preview-container')[0];
-			preview.style.height = '100%';
-			let code = document.getElementsByClassName('logic-editor')[0];
-			code.style.height = 0;
-		};
-		const expandReset = () => {
-			let preview = document.getElementsByClassName('preview-container')[0];
-			preview.style = '';
-			preview.style.marginBottom = 0;
-			let code = document.getElementsByClassName('logic-editor')[0];
-			code.style = '';
-		};
-
-		if (document.getElementsByClassName('preview-container')[0].textContent == 'PreviewPreview not available') {
-			expandLogic();
-		}
+	// hide copilot by default
+	const copilotContainer = document.getElementsByClassName('flex-1 p-12 relative bg-copilot')[0].parentElement.parentElement;
+	copilotContainer.style = 'flex: 0 1 0%;'
 	
-		// document.addEventListener('keydown', handleKeyDown);
-		// document.addEventListener('keyup', (event) => {
-		// 	delete keysPressed[event.key];
-		// });
-
-		if (document.querySelector('.expendHide') === null) {
-			console.log('expandHide not found');
-			var htmlString = `
-		<svg id="expandDown" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="cursor: pointer"><path d="M13.416 17.998a2 2 0 0 1-2.828 0l-.004-.005-9.377-9.436A1.5 1.5 0 0 1 2.27 6h19.522a1.5 1.5 0 0 1 1.06 2.56l-9.437 9.438z"></path></svg>
-		<svg id="expandReset" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="cursor: pointer"><path d="M12 0c6.602 0 12 5.398 12 12s-5.398 12-12 12S0 18.602 0 12 5.398 0 12 0zM6.741 12.928l10.48-.001c1.333 0 1.332-2 0-2l-10.48.001c-1.334 0-1.333 2 0 2z"></path></svg>
-		<svg id="expandUp" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="cursor: pointer"><path d="M13.078 5.676a1.5 1.5 0 0 0-2.12-.034l-.037.037-9.757 10.136a1.5 1.5 0 0 0 1.08 2.54H21.82a1.5 1.5 0 0 0 1.078-2.544L13.078 5.676z"></path></svg>
-	`;
-			var div = document.createElement('div');
-			div.classList.add('expendHide');
-			div.style.textAlign = 'center';
-			var div1 = document.querySelector('.preview-container');
-			div1.style.marginBottom = 0;
-			div.innerHTML = htmlString;
-			div1.after(div);
-
-			div.querySelector('#expandDown').onclick = function () { expandPreview() };
-			div.querySelector('#expandReset').onclick = function () { expandReset() };
-			div.querySelector('#expandUp').onclick = function () { expandLogic() };
-		}
-
-		try {
-			if (document.getElementsByClassName('interactive-input').length > 0) {
-				const expandYml = () => {
-					let preview = document.getElementsByClassName('yml-editor')[0];
-					preview.style.height = '95%';
-					let code = document.getElementsByClassName('interactive-input')[0];
-					code.style.height = 0;
-				};
-				const expandGpt = () => {
-					let preview = document.getElementsByClassName('yml-editor')[0];
-					preview.style.height = 0;
-					let code = document.getElementsByClassName('interactive-input')[0];
-					code.style.height = '70%';
-					code.style.width = '100%';
-					let gpt = document.getElementsByClassName('releaseNotesText')[0]
-					gpt.style = "height: 90% !important; resize: none;"
-				};
-				const expandResetGpt = () => {
-					let preview = document.getElementsByClassName('yml-editor')[0];
-					preview.style = '';
-					preview.style.marginBottom = 0;
-					let code = document.getElementsByClassName('interactive-input')[0];
-					code.style = '';
-				};
-
-				expandYml()
-
-				if (document.querySelector('.expendHideGpt') === null) {
-					console.log('expandHideGpt not found');
-					var htmlString = `
-					<svg id="expandDownGpt" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="cursor: pointer"><path d="M13.416 17.998a2 2 0 0 1-2.828 0l-.004-.005-9.377-9.436A1.5 1.5 0 0 1 2.27 6h19.522a1.5 1.5 0 0 1 1.06 2.56l-9.437 9.438z"></path></svg>
-					<svg id="expandResetGpt" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="cursor: pointer"><path d="M12 0c6.602 0 12 5.398 12 12s-5.398 12-12 12S0 18.602 0 12 5.398 0 12 0zM6.741 12.928l10.48-.001c1.333 0 1.332-2 0-2l-10.48.001c-1.334 0-1.333 2 0 2z"></path></svg>
-					<svg id="expandUpGpt" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="cursor: pointer"><path d="M13.078 5.676a1.5 1.5 0 0 0-2.12-.034l-.037.037-9.757 10.136a1.5 1.5 0 0 0 1.08 2.54H21.82a1.5 1.5 0 0 0 1.078-2.544L13.078 5.676z"></path></svg>
-				`;
-					var div = document.createElement('div');
-					div.classList.add('expendHideGpt');
-					div.style.textAlign = 'center';
-					var div1 = document.querySelector('.yml-editor');
-					div1.style.marginBottom = 0;
-					div.innerHTML = htmlString;
-					div1.after(div);
-
-					div.querySelector('#expandDownGpt').onclick = function () { expandYml() };
-					div.querySelector('#expandResetGpt').onclick = function () { expandResetGpt() };
-					div.querySelector('#expandUpGpt').onclick = function () { expandGpt() };
-				}
-			}
-		} catch (e) {
-			console.log('resizing gpt error\n' + e)
-		}
+	// resize YML to 30% of screen
+	const ymlContainer = copilotContainer.parentElement.parentElement;
+	ymlContainer.style = 'flex: 0.5 1 0%;'
+	
+	// check if no preview, if not then hide preview
+	const previewContainer = document.getElementsByClassName('sc-cTAqQK jQyaTc')[0];
+	const previewContent = previewContainer.children.item(1).textContent;
+	if(previewContent=="Preview not available") {
+	  const previewParentContainer = previewContainer.parentElement.parentElement;
+	  previewParentContainer.style = 'flex: 0 1 0%;';
 	}
+
+	// Move save result message to top of the screen
+	const saveResult = document.getElementsByClassName('flex-1 p-12 relative bg-copilot')[0].parentElement.parentElement;
+	//Box-sc-kv6pi1-0 giDstT
+	//.style.top = "5%";
 
 	//add shortcut to comment shortcut to code mirror and set default value to return continue if empty 
 	try {
@@ -296,6 +198,7 @@ if(currentPage.includes('node')) {
 	
 }
 
+// Code to clean up debugger pages
 if (currentPage.match(".*agoda.*\/wizard\/debug.*")) { // debugger pages
 	// Make element transitions in debugger vertical and wider
 	if (document.getElementById("debuggerviewcontainer")) {
@@ -314,6 +217,7 @@ if (currentPage.match(".*agoda.*\/wizard\/debug.*")) { // debugger pages
 	}
 }
 
+// Code to clean up edit flow overview page (where it shows all the elements)
 if (currentPage.includes('transition')) {
 	try {
 		//remove searchbar
@@ -418,52 +322,6 @@ if (currentPage.includes('transition')) {
 		}
 	});
 	observerTest.observe(connectTo, { childList: true, subtree: false });
-}
-
-if (false && document.location.href == 'https://qa-wizard-designer.agoda.local/') {
-	var styles = `
-        .intro,
-        .intro a{
-          color:#fff;
-          font-family:
-        }
-        /* customizable snowflake styling */
-        .snowflake {
-          color: #fff;
-          font-size: 1em;
-          font-family: Arial;
-          text-shadow: 0 0 1px #000;
-        }
-        
-        @-webkit-keyframes snowflakes-fall{0%{top:-10%}100%{top:100%}}@-webkit-keyframes snowflakes-shake{0%{-webkit-transform:translateX(0px);transform:translateX(0px)}50%{-webkit-transform:translateX(80px);transform:translateX(80px)}100%{-webkit-transform:translateX(0px);transform:translateX(0px)}}@keyframes snowflakes-fall{0%{top:-10%}100%{top:100%}}@keyframes snowflakes-shake{0%{transform:translateX(0px)}50%{transform:translateX(80px)}100%{transform:translateX(0px)}}.snowflake{position:fixed;top:-10%;z-index:9999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;cursor:default;-webkit-animation-name:snowflakes-fall,snowflakes-shake;-webkit-animation-duration:10s,3s;-webkit-animation-timing-function:linear,ease-in-out;-webkit-animation-iteration-count:infinite,infinite;-webkit-animation-play-state:running,running;animation-name:snowflakes-fall,snowflakes-shake;animation-duration:10s,3s;animation-timing-function:linear,ease-in-out;animation-iteration-count:infinite,infinite;animation-play-state:running,running}.snowflake:nth-of-type(0){left:1%;-webkit-animation-delay:0s,0s;animation-delay:0s,0s}.snowflake:nth-of-type(1){left:10%;-webkit-animation-delay:1s,1s;animation-delay:1s,1s}.snowflake:nth-of-type(2){left:20%;-webkit-animation-delay:6s,.5s;animation-delay:6s,.5s}.snowflake:nth-of-type(3){left:30%;-webkit-animation-delay:4s,2s;animation-delay:4s,2s}.snowflake:nth-of-type(4){left:40%;-webkit-animation-delay:2s,2s;animation-delay:2s,2s}.snowflake:nth-of-type(5){left:50%;-webkit-animation-delay:8s,3s;animation-delay:8s,3s}.snowflake:nth-of-type(6){left:60%;-webkit-animation-delay:6s,2s;animation-delay:6s,2s}.snowflake:nth-of-type(7){left:70%;-webkit-animation-delay:2.5s,1s;animation-delay:2.5s,1s}.snowflake:nth-of-type(8){left:80%;-webkit-animation-delay:1s,0s;animation-delay:1s,0s}.snowflake:nth-of-type(9){left:90%;-webkit-animation-delay:3s,1.5s;animation-delay:3s,1.5s}
-        /* Demo Purpose Only*/
-        .demo {
-          font-family: 'Raleway', sans-serif;
-        	color:#fff;
-            display: block;
-            margin: 0 auto;
-            padding: 15px 0;
-            text-align: center;
-        }
-        .demo a{
-          font-family: 'Raleway', sans-serif;
-        color: #000;		
-        }
-`
-
-	var styleSheet = document.createElement("style")
-	styleSheet.innerText = styles
-	document.head.appendChild(styleSheet)
-
-	var snowFlakeDiv = document.createElement("div")
-	snowFlakeDiv.classList.add("snowflakes");
-	snowFlakeDiv.setAttribute("aria-hidden", "true")
-	//<div class="snowflakes" aria-hidden="true">
-	const snowHTML = `
-      <div class="snowflake">❅</div><div class="snowflake">❅</div><div class="snowflake">❆</div><div class="snowflake">❄</div><div class="snowflake">❅</div><div class="snowflake">❆</div><div class="snowflake">❄</div><div class="snowflake">❅</div><div class="snowflake">❆</div><div class="snowflake">❄</div></div>
-    `
-	snowFlakeDiv.innerHTML = snowHTML
-	document.body.appendChild(snowFlakeDiv)
 }
 
 if (document.location.href == "https://wizard-designer-pc.qa.agoda.is/deploy") {
