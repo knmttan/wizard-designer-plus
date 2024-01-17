@@ -18,57 +18,34 @@ function updateTabName() {
 	const currPage = location.href;
 	const currPath = decodeURI(document.location.pathname);
 	const currHost = document.location.host;
-	// first check if we are in the designer tool or debugger
-	if (currHost.match(".*wizard-designer.*")) { // designer tool
-		// use flow name if user is in transition or node editor
-		if(currPage.includes('node')||currPage.includes('transition')) { // flow editor pages
-			let flowName = currPath.split('/')[2].replace('Cancellation ', '');
-			while(flowName.length>30) {
-				flowName = flowName.split(' ').slice(1).join(' ');
-			}
-			setFavicons('https://cdn-icons-png.flaticon.com/128/1680/1680365.png');
-			document.title = flowName;
-		} else if (currPath.split('/')[1] == 'integrationPoint') { // API Builder page
-			setFavicons('https://cdn-icons-png.flaticon.com/128/9110/9110100.png')
-			document.title = 'API Builder';
-		} else if (currPath.split('/')[1].includes('deploy')) { // deployment page
-			setFavicons('https://cdn-icons-png.flaticon.com/128/4471/4471714.png')
-			document.title = 'Deploy';
-		} else if (currPath.split('/')[1].includes('workflowTable')) { // deployment page
-			setFavicons('https://cdn-icons-png.flaticon.com/128/4471/4471714.png')
-			document.title = 'Workflow Table';
-		} else if(currPage=="https://qa-wizard-designer.agoda.local/" || currPage=="https://wizard-designer-pc.qa.agoda.is/") { // home page
-			setFavicons('https://cdn-icons-png.flaticon.com/128/1680/1680365.png');
-			document.title = "Wizard Flow Designer";
+	setFavicons('https://cdn-icons-png.flaticon.com/128/1541/1541402.png');
+	// for agent debugger, this works fine
+	let flowName = document.getElementsByClassName("title")[0].children.item(0).innerText
+	// for vivr debugger, the title is set by react, need to apply a mutation observer to capture it
+	if(currHost.match(".*visual-ivr.*")) {
+		const titleElement = document.getElementsByClassName("title")[0].children.item(0)
+		const title_observer = new MutationObserver(getTitle);
+		function getTitle(mutations, observer) {
+			flowName = titleElement.innerText;
+			document.title = 'Debug ' + flowName;
+			title_observer.disconnect();
 		}
-	} else if (currPage.match(".*agoda.*\/wizard\/debug.*")) { // debugger pages
-		setFavicons('https://cdn-icons-png.flaticon.com/128/1541/1541402.png');
-		// for agent debugger, this works fine
-		let flowName = document.getElementsByClassName("title")[0].children.item(0).innerText
-		// for vivr debugger, the title is set by react, need to apply a mutation observer to capture it
-		if(currHost.match(".*visual-ivr.*")) {
-			const titleElement = document.getElementsByClassName("title")[0].children.item(0)
-			const title_observer = new MutationObserver(getTitle);
-			function getTitle(mutations, observer) {
-				flowName = titleElement.innerText;
-				document.title = 'Debug ' + flowName;
-				title_observer.disconnect();
-			}
-			title_observer.observe(titleElement, { subtree: false, childList: true });
-		}
-		document.title = 'Debug ' + flowName;
-		removeElementsByClass('footer-container');
+		title_observer.observe(titleElement, { subtree: false, childList: true });
 	}
+	document.title = 'Debug ' + flowName;
+	removeElementsByClass('footer-container');
 }
 
 // Set function that runs every 500ms to check for a change in pages
 let currentPage = location.href;
-updateTabName();
 setInterval(function()
 {
 	if (currentPage != location.href) { // page changed
 		currentPage = location.href;
-		updateTabName();
+		// update tab name (only needed for debug pages now)
+		if (currentPage.match(".*agoda.*\/wizard\/debug.*")) {
+			updateTabName();
+		}
 		if(currentPage.includes('node')||currentPage.includes('transition')) {
 			// auto-refresh page if its in the node editor or transition editor (changes only get applied after a refresh)
 			location.reload();
@@ -81,70 +58,23 @@ setInterval(function()
 // First check if we are on the node editor page, for performance reasons because we set a mutation observer
 if(currentPage.includes('node')) {
 	try {
-		//skip confirmation pop up except transition
-		const realConfirm=window.confirm;
-		
-		if (decodeURI(document.location.pathname).split('/')[1] != 'transition'){
-			window.confirm=function(){
-				return true;
-			};
-		} else {
-			window.confirm=realConfirm;
-		}
-		
-		// Hide save description box and move save result message to top of screen
-		let saveDescNode = null;
-		let display = 'none';
+		// Move save result message to top of screen
 		const observer = new MutationObserver(function (mutations_list) {
 			mutations_list.forEach(function (mutation) {
 				mutation.addedNodes.forEach(function (added_node_parent) {
-					var added_node = added_node_parent.childNodes[0]
-					if (added_node.role == 'dialog') {
-						if (added_node.innerText.indexOf('Update element description') !== -1) {
-							saveDescNode = added_node;
-							saveDescNode.style.display = display;
-							const saveResult = document.querySelectorAll('div[type="toast"]')[0].parentElement;
-							saveResult.style.top = "5%";
-						}
-					}
+				  try {
+				    const saveResult = document.querySelectorAll('div[type="toast"]')[0].parentElement;
+				    if(saveResult !== null) {
+				      saveResult.style.top = "7%";
+				    }
+				  } catch {}
 				});
 			});
 		});
-		observer.observe(document.body, { subtree: false, childList: true });
-		
-		// Add save description button
-		const saveChangesButton = document.querySelectorAll('button[data-testid="header-save-button"]')[0];
-		const saveButtonParent = saveChangesButton.parentElement;
-		let saveDescriptionButton = saveChangesButton.cloneNode(true);
-		saveDescriptionButton.textContent = "Save Description";
-		saveButtonParent.insertBefore(saveDescriptionButton, saveChangesButton);
-		
-		let saveDescriptionClicked = false;
-		saveDescriptionButton.addEventListener("click", function() {
-			saveDescriptionClicked = true;
-			saveChangesButton.click()
-			saveDescriptionClicked = false;
-		});
-		
-		saveChangesButton.addEventListener("click", function() {
-			if(saveDescNode) {
-				if(saveDescriptionClicked) {
-					display = '';
-					saveDescNode.style.display = '';
-				} else {
-					display = 'none';
-					saveDescNode.style.display = 'none';
-				}
-			} else {
-				if(saveDescriptionClicked) {
-					display = '';
-				} else {
-					display = 'none';
-				}
-			}
-		});
+		observer.observe(document.body, { subtree: true, childList: true });
 
 		// Add alt+s keyboard shortcut for saving
+		const saveChangesButton = document.querySelectorAll('button[data-testid="header-save-button"]')[0];
 		document.addEventListener('keyup', function(event) {
 		    if (event.key == 's' && event.altKey) {
 		        saveChangesButton.click();
@@ -155,20 +85,20 @@ if(currentPage.includes('node')) {
 		console.log("ERROR")
 	}
 
-	// hide copilot by default
-	const copilotContainer = document.getElementsByClassName('flex-1 p-12 relative bg-copilot')[0].parentElement.parentElement;
-	copilotContainer.style = 'flex: 0 1 0%;'
-	
 	// resize YML to 30% of screen
-	const ymlContainer = copilotContainer.parentElement.parentElement;
-	ymlContainer.style = 'flex: 0.5 1 0%;'
+	const verticalResizer = document.getElementsByClassName('overflow-hidden')[1];
+	verticalResizer.style = 'flex: 0.5 1 0%;'
+	
+	// hide copilot by default
+	const copilotResizer = verticalResizer.children.item(0).children.item(0).children.item(0).children.item(2);
+	copilotResizer.style = 'flex: 0 1 0%;'
 	
 	// check if no preview, if not then hide preview
-	const previewContainer = document.getElementsByClassName('sc-cTAqQK jQyaTc')[0];
-	const previewContent = previewContainer.children.item(1).textContent;
-	if(previewContent=="Preview not available") {
-	  const previewParentContainer = previewContainer.parentElement.parentElement;
-	  previewParentContainer.style = 'flex: 0 1 0%;';
+	const potentialPreviewContainers = document.getElementsByClassName('flex justify-center');
+	for (let i = 0; i < potentialPreviewContainers.length; i++) {
+	  if(potentialPreviewContainers[i].textContent=="Preview not available") {
+	    potentialPreviewContainers[i].parentElement.parentElement.parentElement.style = 'flex: 0 1 0%;';
+	  }
 	}
 
 	//add shortcut to comment shortcut to code mirror and set default value to return continue if empty 
