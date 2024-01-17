@@ -144,14 +144,11 @@ if(currentPage.includes('node')) {
 			}
 		});
 
-		const handleKeyDown = (event) => {
-			keysPressed[event.key] = true;
-			if (keysPressed['Alt']&& event.code == 'KeyS') saveChangesButton.click();
-		}
-
-		document.addEventListener('keydown', handleKeyDown);
-		document.addEventListener('keyup', (event) => {
-			delete keysPressed[event.key];
+		// Add alt+s keyboard shortcut for saving
+		document.addEventListener('keyup', function(event) {
+		    if (event.key == 's' && event.altKey) {
+		        saveChangesButton.click();
+		    }
 		});
 	} catch(e) {
 		console.log(e)
@@ -173,11 +170,6 @@ if(currentPage.includes('node')) {
 	  const previewParentContainer = previewContainer.parentElement.parentElement;
 	  previewParentContainer.style = 'flex: 0 1 0%;';
 	}
-
-	// Move save result message to top of the screen
-	const saveResult = document.getElementsByClassName('flex-1 p-12 relative bg-copilot')[0].parentElement.parentElement;
-	//Box-sc-kv6pi1-0 giDstT
-	//.style.top = "5%";
 
 	//add shortcut to comment shortcut to code mirror and set default value to return continue if empty 
 	try {
