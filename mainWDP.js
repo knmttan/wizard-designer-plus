@@ -38,7 +38,6 @@ function updateTabName() {
 
 // Set function that runs every 500ms to check for a change in pages
 let currentPage = location.href;
-updateTabName();
 setInterval(function()
 {
 	if (currentPage != location.href) { // page changed
