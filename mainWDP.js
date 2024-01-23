@@ -224,7 +224,7 @@ if (currentPage.includes('transition')) {
 		}
 	});
 	
-	var newDOMToObs = document.querySelector(".dOTjLj > span");
+	var newDOMToObs = document.querySelector(".fwYihJ > span");
 	if (newDOMToObs) {
 		observerTestChild.observe(newDOMToObs, { characterData: true, attributes: false, childList: true, subtree: true });
 	}
@@ -236,7 +236,7 @@ if (currentPage.includes('transition')) {
 			if (connectTo.innerHTML == '') {
 				observerTestChild.disconnect()
 			} else {
-				newDOMToObs = document.querySelector(".dOTjLj > span");
+				newDOMToObs = document.querySelector(".fwYihJ > span");
 				const elementName = newDOMToObs.innerHTML.replace('Keys', '').trim()
 				createConnectedFrom(elementName)
 				observerTestChild.observe(newDOMToObs, { characterData: true, attributes: false, childList: true, subtree: true });
