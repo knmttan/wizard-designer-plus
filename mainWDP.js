@@ -209,7 +209,7 @@ if (currentPage.includes('transition')) {
 	
 		div.innerHTML = `
 	                <div class="key-container" style="width:100%">
-	                    <div class="sc-iidyiZ dfswiU"><span class="sc-jRQBWg hEGTwu">Connected From</span></div>
+	                    <div class="sc-iidyiZ jzLRzv"><span class="sc-jRQBWg hEGTwu">Connected From</span></div>
 	                    ${elementFromListDiv.join('')}
 	                </div>
 	            `
@@ -224,7 +224,7 @@ if (currentPage.includes('transition')) {
 		}
 	});
 	
-	var newDOMToObs = document.querySelector(".dfswiU > span");
+	var newDOMToObs = document.querySelector(".jzLRzv > span");
 	if (newDOMToObs) {
 		observerTestChild.observe(newDOMToObs, { characterData: true, attributes: false, childList: true, subtree: true });
 	}
@@ -236,7 +236,7 @@ if (currentPage.includes('transition')) {
 			if (connectTo.innerHTML == '') {
 				observerTestChild.disconnect()
 			} else {
-				newDOMToObs = document.querySelector(".dfswiU > span");
+				newDOMToObs = document.querySelector(".jzLRzv > span");
 				const elementName = newDOMToObs.innerHTML.replace('Keys', '').trim()
 				createConnectedFrom(elementName)
 				observerTestChild.observe(newDOMToObs, { characterData: true, attributes: false, childList: true, subtree: true });
