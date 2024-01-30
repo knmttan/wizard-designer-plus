@@ -57,33 +57,13 @@ setInterval(function()
 // Fast save code below
 // First check if we are on the node editor page, for performance reasons because we set a mutation observer
 if(currentPage.includes('node')) {
-	try {
-		// Move save result message to top of screen
-		const observer = new MutationObserver(function (mutations_list) {
-			mutations_list.forEach(function (mutation) {
-				mutation.addedNodes.forEach(function (added_node_parent) {
-				  try {
-				    const saveResult = document.querySelectorAll('div[type="toast"]')[0].parentElement;
-				    if(saveResult !== null) {
-				      saveResult.style.top = "7%";
-				    }
-				  } catch {}
-				});
-			});
-		});
-		observer.observe(document.body, { subtree: true, childList: true });
-
-		// Add alt+s keyboard shortcut for saving
-		const saveChangesButton = document.querySelectorAll('button[data-testid="header-save-button"]')[0];
-		document.addEventListener('keyup', function(event) {
-		    if (event.key == 's' && event.altKey) {
-		        saveChangesButton.click();
-		    }
-		});
-	} catch(e) {
-		console.log(e)
-		console.log("ERROR")
-	}
+	// Add alt+s keyboard shortcut for saving
+	const saveChangesButton = document.querySelectorAll('button[data-testid="header-save-button"]')[0];
+	document.addEventListener('keyup', function(event) {
+	    if (event.key == 's' && event.altKey) {
+		saveChangesButton.click();
+	    }
+	});
 
 	// resize YML to 30% of screen
 	const verticalResizer = document.getElementsByClassName('overflow-hidden')[1];
