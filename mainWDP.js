@@ -65,11 +65,8 @@ if(currentPage.includes('node')) {
 	    }
 	});
 
-	// resize YML to 30% of screen
-	const verticalResizer = document.getElementsByClassName('overflow-hidden')[1];
-	verticalResizer.style = 'flex: 0.5 1 0%;'
-	
 	// hide copilot by default
+	const verticalResizer = document.getElementsByClassName('overflow-hidden')[1];
 	const copilotResizer = verticalResizer.children.item(0).children.item(0).children.item(0).children.item(2);
 	copilotResizer.style = 'flex: 0 1 0%;'
 	
@@ -81,9 +78,12 @@ if(currentPage.includes('node')) {
 		  }
 	}
 	const vivrPreviewContainer = document.querySelectorAll('div[data-testid="preview-container"]')[0]; // specific to vivr
-	if(!vivrPreviewContainer.textContent) {
+	if(vivrPreviewContainer && !vivrPreviewContainer.textContent) {
 	 	 vivrPreviewContainer.parentElement.parentElement.parentElement.style = 'flex: 0 1 0%;'
 	}
+
+	// resize YML to 30% of screen
+	verticalResizer.style = 'flex: 0.5 1 0%;'
 
 	//add shortcut to comment shortcut to code mirror and set default value to return continue if empty 
 	try {
