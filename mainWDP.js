@@ -76,9 +76,13 @@ if(currentPage.includes('node')) {
 	// check if no preview, if not then hide preview
 	const potentialPreviewContainers = document.getElementsByClassName('flex justify-center');
 	for (let i = 0; i < potentialPreviewContainers.length; i++) {
-	  if(potentialPreviewContainers[i].textContent=="Preview not available") {
-	    potentialPreviewContainers[i].parentElement.parentElement.parentElement.style = 'flex: 0 1 0%;';
-	  }
+		  if(potentialPreviewContainers[i].textContent=="Preview not available") {
+			  potentialPreviewContainers[i].parentElement.parentElement.parentElement.style = 'flex: 0 1 0%;';
+		  }
+	}
+	const vivrPreviewContainer = document.querySelectorAll('div[data-testid="preview-container"]')[0]; // specific to vivr
+	if(!vivrPreviewContainer.textContent) {
+	 	 vivrPreviewContainer.parentElement.parentElement.parentElement.style = 'flex: 0 1 0%;'
 	}
 
 	//add shortcut to comment shortcut to code mirror and set default value to return continue if empty 
