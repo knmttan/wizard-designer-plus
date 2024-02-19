@@ -230,7 +230,7 @@ if (currentPage.includes('transition')) {
 	observerTest.observe(connectTo, { childList: true, subtree: false });
 }
 
-if (document.location.href == "https://wizard-designer-pc.qa.agoda.is/deploy") {
+if (document.location.href == "https://qa-wizard-designer.agoda.local/deploy") {
 	// Select the node that will be observed for mutations (in this case, the body)
 	var targetNode = document.querySelector("body");
 
