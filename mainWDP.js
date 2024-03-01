@@ -87,7 +87,7 @@ if(currentPage.includes('node')) {
 
 	//add shortcut to comment shortcut to code mirror and set default value to return continue if empty 
 	try {
-		let cmInstance = document.querySelector('.logic-editor').querySelector('.CodeMirror').CodeMirror
+		let cmInstance = document.querySelectorAll('.CodeMirror')[1].CodeMirror
 
 		if (cmInstance.getValue() === '') {
 			cmInstance.setValue("return 'continue';");
