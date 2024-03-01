@@ -67,7 +67,7 @@ if(currentPage.includes('node')) {
 
 	// hide copilot by default
 	const verticalResizer = document.getElementsByClassName('overflow-hidden')[1];
-	const copilotResizer = verticalResizer.children.item(0).children.item(0).children.item(0).children.item(2);
+	const copilotResizer = document.querySelector("#root > div > div > div:nth-child(2) > div:nth-child(2) > div > div > div:nth-child(1) > div > div > div > div:nth-child(3)") //verticalResizer.children.item(0).children.item(0).children.item(0).children.item(2);
 	copilotResizer.style = 'flex: 0 1 0%;'
 	
 	// check if no preview, if not then hide preview
@@ -88,6 +88,8 @@ if(currentPage.includes('node')) {
 	//add shortcut to comment shortcut to code mirror and set default value to return continue if empty 
 	try {
 		let cmInstance = document.querySelectorAll('.CodeMirror')[1].CodeMirror
+		console.log("cmInstance")
+		console.log(cmInstance)
 
 		if (cmInstance.getValue() === '') {
 			cmInstance.setValue("return 'continue';");
