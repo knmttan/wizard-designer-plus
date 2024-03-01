@@ -57,33 +57,38 @@ setInterval(function()
 // Fast save code below
 // First check if we are on the node editor page, for performance reasons because we set a mutation observer
 if(currentPage.includes('node')) {
-	// Add alt+s keyboard shortcut for saving
-	const saveChangesButton = document.querySelectorAll('button[data-testid="header-save-button"]')[0];
-	document.addEventListener('keyup', function(event) {
-	    if (event.key == 's' && event.altKey) {
-		saveChangesButton.click();
-	    }
-	});
-
-	// hide copilot by default
-	const verticalResizer = document.getElementsByClassName('overflow-hidden')[1];
-	const copilotResizer = document.querySelector("#root > div > div > div:nth-child(2) > div:nth-child(2) > div > div > div:nth-child(1) > div > div > div > div:nth-child(3)") //verticalResizer.children.item(0).children.item(0).children.item(0).children.item(2);
-	copilotResizer.style = 'flex: 0 1 0%;'
+	try {
+		// Add alt+s keyboard shortcut for saving
+		const saveChangesButton = document.querySelectorAll('button[data-testid="header-save-button"]')[0];
+		document.addEventListener('keyup', function(event) {
+		    if (event.key == 's' && event.altKey) {
+			saveChangesButton.click();
+		    }
+		});
 	
-	// check if no preview, if not then hide preview
-	const potentialPreviewContainers = document.getElementsByClassName('flex justify-center');
-	for (let i = 0; i < potentialPreviewContainers.length; i++) {
-		  if(potentialPreviewContainers[i].textContent=="Preview not available") {
-			  potentialPreviewContainers[i].parentElement.parentElement.parentElement.style = 'flex: 0 1 0%;';
-		  }
-	}
-	const vivrPreviewContainer = document.querySelectorAll('div[data-testid="preview-container"]')[0]; // specific to vivr
-	if(vivrPreviewContainer && !vivrPreviewContainer.textContent) {
-	 	 vivrPreviewContainer.parentElement.parentElement.parentElement.style = 'flex: 0 1 0%;'
+		// hide copilot by default
+		const verticalResizer = document.getElementsByClassName('overflow-hidden')[1];
+		const copilotResizer = document.querySelector("#root > div > div > div:nth-child(2) > div:nth-child(2) > div > div > div:nth-child(1) > div > div > div > div:nth-child(3)") //verticalResizer.children.item(0).children.item(0).children.item(0).children.item(2);
+		copilotResizer.style = 'flex: 0 1 0%;'
+		
+		// check if no preview, if not then hide preview
+		const potentialPreviewContainers = document.getElementsByClassName('flex justify-center');
+		for (let i = 0; i < potentialPreviewContainers.length; i++) {
+			  if(potentialPreviewContainers[i].textContent=="Preview not available") {
+				  potentialPreviewContainers[i].parentElement.parentElement.parentElement.style = 'flex: 0 1 0%;';
+			  }
+		}
+		const vivrPreviewContainer = document.querySelectorAll('div[data-testid="preview-container"]')[0]; // specific to vivr
+		if(vivrPreviewContainer && !vivrPreviewContainer.textContent) {
+		 	 vivrPreviewContainer.parentElement.parentElement.parentElement.style = 'flex: 0 1 0%;'
+		}
+	
+		// resize YML to 30% of screen
+		verticalResizer.style = 'flex: 0.5 1 0%;'
+	} catch {
+		console.log('modify save change shortcut or copilot resizer error');
 	}
 
-	// resize YML to 30% of screen
-	verticalResizer.style = 'flex: 0.5 1 0%;'
 
 	//add shortcut to comment shortcut to code mirror and set default value to return continue if empty 
 	try {
