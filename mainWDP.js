@@ -48,7 +48,7 @@ setInterval(function()
 		}
 		if(currentPage.includes('node')||currentPage.includes('transition')) {
 			// auto-refresh page if its in the node editor or transition editor (changes only get applied after a refresh)
-			//location.reload();
+			location.reload();
 		}
 	}
 }, 500);
