@@ -124,7 +124,7 @@ if (currentPage.includes('transition')) {
 		const elements = document.getElementsByClassName('element-list');
 		for (var i = 0; elements[i]; i++) {
 			const ele = elements[i];
-			ele.setAttribute("style", "overflow-y: visible; height: auto; border-bottom: 1px solid black");
+			ele.setAttribute("style", "overflow-y: visible; border-bottom: 1px solid black");
 		};
 	} catch (e) {
 		console.log('removing searchbar or remove element scroll or debugger vertical element error\n' + e)
