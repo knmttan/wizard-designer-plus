@@ -46,7 +46,7 @@ setInterval(function()
 		if (currentPage.match(".*agoda.*\/wizard\/debug.*")) {
 			updateTabName();
 		}
-		if(currentPage.includes('node')||currentPage.includes('transition')) {
+		if(currentPage.includes('node')) {
 			// auto-refresh page if its in the node editor or transition editor (changes only get applied after a refresh)
 			location.reload();
 		}
@@ -119,13 +119,6 @@ if (currentPage.includes('transition')) {
 			console.log('searchbar found');
 			searchbar.remove()
 		}
-
-		// get rid of the terrible scroll bar for element names
-		const elements = document.getElementsByClassName('element-list');
-		for (var i = 0; elements[i]; i++) {
-			const ele = elements[i];
-			ele.setAttribute("style", "overflow-y: visible; border-bottom: 1px solid black");
-		};
 	} catch (e) {
 		console.log('removing searchbar or remove element scroll or debugger vertical element error\n' + e)
 	}
