@@ -46,7 +46,7 @@ setInterval(function()
 		if (currentPage.match(".*agoda.*\/wizard\/debug.*")) {
 			updateTabName();
 		}
-		if(currentPage.includes('node')) {
+		if(currentPage.includes('node') || currentPage = 'https://qa-wizard-designer.agoda.local/') {
 			// auto-refresh page if its in the node editor or transition editor (changes only get applied after a refresh)
 			location.reload();
 		}
