@@ -46,10 +46,6 @@ setInterval(function()
 		if (currentPage.match(".*agoda.*\/wizard\/debug.*")) {
 			updateTabName();
 		}
-		if(currentPage.includes('node')) {
-			// auto-refresh page if its in the node editor or transition editor (changes only get applied after a refresh)
-			location.reload();
-		}
 	}
 }, 500);
 
@@ -73,12 +69,6 @@ if(currentPage.includes('node')) {
 	//add shortcut to comment shortcut to code mirror and set default value to return continue if empty 
 	try {
 		let cmInstance = document.querySelectorAll('.CodeMirror')[1].CodeMirror
-		console.log("cmInstance")
-		console.log(cmInstance)
-
-		if (cmInstance.getValue() === '') {
-			cmInstance.setValue("return 'continue';");
-		}
 
 		cmInstance.setOption("extraKeys", {
 			"Ctrl-/": "toggleComment",
